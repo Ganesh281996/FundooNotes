@@ -41,16 +41,13 @@ public class User
 
 	@Field
 	private boolean isVerified;
-
-	public User(String name, String email, String password, long phoneNumber) 
+	
+	@Override
+	public String toString() 
 	{
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.phoneNumber = phoneNumber;
+		return "User [_id=" + _id + ", name=" + name + ", email=" + email + ", password=" + password + ", phoneNumber="
+				+ phoneNumber + ", isVerified=" + isVerified + "]";
 	}
-
-	public User() {}
 
 	public String get_id() {
 		return _id;
@@ -98,12 +95,5 @@ public class User
 
 	public void setVerified(boolean isVerified) {
 		this.isVerified = isVerified;
-	}
-
-	@Override
-	public String toString() 
-	{
-		return "User [_id=" + _id + ", name=" + name + ", email=" + email + ", password=" + password + ", phoneNumber="
-				+ phoneNumber + ", isVerified=" + isVerified + "]";
 	}
 }

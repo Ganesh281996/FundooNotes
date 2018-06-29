@@ -16,12 +16,12 @@ public class EmailService
 	
 	private static final Logger LOGGER=Logger.getLogger(EmailService.class.getName());
 	
-	public void sendEmail(String token,String email) throws MessagingException
+	public void sendEmail(String url,String email) throws MessagingException
 	{
 		MimeMessage message=javaMailSender.createMimeMessage();
 		MimeMessageHelper helper=new MimeMessageHelper(message);
 		helper.setTo(email);
-		helper.setText("<a href ='http://localhost:8080/user/verify/"+token+"'>Verify Email</a>" , true);
+		helper.setText(url , true);
 		helper.setSubject("Subject");
 		javaMailSender.send(message);
 		LOGGER.info("Verification Email has been Sent");

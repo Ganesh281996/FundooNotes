@@ -58,14 +58,14 @@ public class UserServiceImpl implements UserService
 		String token=jwtTokenService.getJwtToken(user.get_id());
 		try
 		{
-			emailService.sendEmail(token,user.getEmail());
+			emailService.sendEmail("<a href ='http://localhost:8080/user/activateuser/"+token+"'>Verify Email</a>",user.getEmail());
 			response.setMessage("Verification Email has been Sent");
 			response.setHttpStatus(HttpStatus.OK);
 			return response;
 		}
 		catch(Exception exception)
 		{
-			LOGGER.info("Unable to send Email");
+			LOGGER.warning("Unable to send Email");
 			response.setMessage("Unable to send Email");
 			response.setHttpStatus(HttpStatus.BAD_REQUEST);
 			return response;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public Response verifyToken(String token) 
+	public Response activateUser(String token) 
 	{
 		response=new Response();
 		String _id=null;
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService
 		}
 		catch(Exception exception)
 		{
-			LOGGER.info("Invalid Token unable to verify");
+			LOGGER.warning("Invalid Token unable to verify");
 			response.setMessage("Invalid Token unable to verify");
 			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
 			return response;
@@ -124,5 +124,95 @@ public class UserServiceImpl implements UserService
 		response.setMessage("User with given Email and Password was not found");
 		response.setHttpStatus(HttpStatus.NOT_FOUND);
 		return response;
+	}
+
+	@Override
+	public Response forgotPassword(String email) 
+	{
+		response=new Response();
+		User user = userDao.findByEmail(email);
+		if(user==null)
+		{
+			LOGGER.warning("User with given Email was not found");
+			response.setMessage("User with given Email was not found");
+			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			return response;
+		}
+		
+		String token = jwtTokenService.getJwtToken(user.get_id());
+		try
+		{
+			emailService.sendEmail("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>", email);
+			response.setMessage("Email has been Sent");
+			response.setHttpStatus(HttpStatus.OK);
+			return response;
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Unable to send Email");
+			response.setMessage("Unable to send Email");
+			response.setHttpStatus(HttpStatus.BAD_REQUEST);
+			return response;
+		}
+	}
+
+	@Override
+	public Response resetPassword(String token,String password1,String password2) 
+	{
+		response=new Response();
+		if(!password1.equals(password2))
+		{
+			LOGGER.warning("Passwords didnt match");
+			response.setMessage("Passwords didnt match");
+			response.setHttpStatus(HttpStatus.BAD_REQUEST);
+			return response;
+		}
+		String _id = null;
+		try
+		{
+			_id=jwtTokenService.verifyToken(token);
+			LOGGER.info("Token has been verified");
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Invalid Token unable to verify");
+			response.setMessage("Invalid Token unable to verify");
+			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			return response;
+		}
+		User user = userDao.findBy_id(_id);
+		if(user!=null)
+		{
+			user.setPassword(bCryptPasswordEncoder.encode(password1));
+			userDao.save(user);
+			LOGGER.info("Password has been changed");
+			response.setMessage("Password has been changed");
+			response.setHttpStatus(HttpStatus.OK);
+			return response;
+		}
+		LOGGER.warning("User with Id present in token was not found");
+		response.setMessage("User with Id present in token was not found");
+		response.setHttpStatus(HttpStatus.NOT_FOUND);
+		return response;
+	}
+
+	@Override
+	public Response verifyToken(String token) 
+	{
+		try
+		{
+			jwtTokenService.verifyToken(token);
+			LOGGER.info("Token has been verified");
+			response.setMessage("Token has been verified");
+			response.setHttpStatus(HttpStatus.OK);
+			return response;
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Invalid Token unable to verify");
+			response.setMessage("Invalid Token unable to verify");
+			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			return response;
+		}
 	}
 }
