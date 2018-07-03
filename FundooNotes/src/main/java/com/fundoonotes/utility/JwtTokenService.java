@@ -10,7 +10,7 @@ public class JwtTokenService
 {
 	private static final Logger LOGGER=Logger.getLogger(JwtTokenService.class.getName());
 	
-	private static final String KEY = "secretkey";
+	private static final String KEY = "nothing";
 	private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 	
 	public String getJwtToken(String _id)

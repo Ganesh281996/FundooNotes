@@ -1,6 +1,7 @@
 package com.fundoonotes.note.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="Notes")
@@ -12,11 +13,14 @@ public class Note
 	private String title;
 	
 	private String body;
+	
+	@DBRef
+	private User user;
 
 	@Override
 	public String toString() 
 	{
-		return "Note [_id=" + _id + ", title=" + title + ", body=" + body + "]";
+		return "Note [_id=" + _id + ", title=" + title + ", body=" + body + ", user=" + user + "]";
 	}
 
 	public String get_id() {
@@ -41,5 +45,13 @@ public class Note
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
