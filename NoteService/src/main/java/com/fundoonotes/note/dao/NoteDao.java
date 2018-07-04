@@ -9,8 +9,7 @@ import com.fundoonotes.note.model.Note;
 
 @Repository
 public interface NoteDao extends MongoRepository<Note, String> 
-{
-	int deleteBy_id(String _id);
-	
-	List<Note> findByUser(String _id);
+{	
+	List<Note> findByUser_UserId(String id);
+	Note findByNoteId(String noteId);
 }

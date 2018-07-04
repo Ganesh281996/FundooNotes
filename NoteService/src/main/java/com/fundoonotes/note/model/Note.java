@@ -8,11 +8,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Note 
 {
 	@Id
-	private String _id;
+	private String noteId;
 	
 	private String title;
 	
 	private String body;
+	
+	private String createdDate;
+	
+	private String lastUpdatedDate;
+	
+	private boolean isPinned;
+	
+	private boolean isArchieved;
+	
+	private boolean inTrash;
 	
 	@DBRef
 	private User user;
@@ -20,15 +30,17 @@ public class Note
 	@Override
 	public String toString() 
 	{
-		return "Note [_id=" + _id + ", title=" + title + ", body=" + body + ", user=" + user + "]";
+		return "Note [noteId=" + noteId + ", title=" + title + ", body=" + body + ", createdDate=" + createdDate
+				+ ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned=" + isPinned + ", isArchieved=" + isArchieved
+				+ ", inTrash=" + inTrash + ", user=" + user + "]";
 	}
 
-	public String get_id() {
-		return _id;
+	public String getNoteId() {
+		return noteId;
 	}
 
-	public void set_id(String _id) {
-		this._id = _id;
+	public void setNoteId(String noteId) {
+		this.noteId = noteId;
 	}
 
 	public String getTitle() {
@@ -45,6 +57,46 @@ public class Note
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getLastUpdatedDate() {
+		return lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(String lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public boolean isPinned() {
+		return isPinned;
+	}
+
+	public void setPinned(boolean isPinned) {
+		this.isPinned = isPinned;
+	}
+
+	public boolean isArchieved() {
+		return isArchieved;
+	}
+
+	public void setArchieved(boolean isArchieved) {
+		this.isArchieved = isArchieved;
+	}
+
+	public boolean isInTrash() {
+		return inTrash;
+	}
+
+	public void setInTrash(boolean inTrash) {
+		this.inTrash = inTrash;
 	}
 
 	public User getUser() {

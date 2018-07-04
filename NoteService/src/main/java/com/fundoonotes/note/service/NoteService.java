@@ -12,4 +12,8 @@ public interface NoteService
 	Response updateNote(Note note,String token);
 	Response deleteNote(String noteId,String token);
 	Response displayNotes(String token);
+	
+	Response pin(String noteId);
+	Response archieve(String noteId);
+	Response trash(String noteId);
 }

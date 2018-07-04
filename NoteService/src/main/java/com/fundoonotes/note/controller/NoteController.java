@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,11 +30,10 @@ public class NoteController
 	@Autowired
 	NoteService noteService;
 	
-	static String userId;
 	static
 	{
 		JwtTokenService jwtTokenService=new JwtTokenService();
-		String token = jwtTokenService.getJwtToken("5b3b466a12b3250c2bdf22de");
+		String token = jwtTokenService.getJwtToken("5b3c575012b32521affe1abd");
 		System.out.println(token);
 	}
 	
@@ -56,10 +56,10 @@ public class NoteController
 		return new ResponseEntity<>(response,response.getHttpStatus());
 	}
 	
-	@PostMapping(value="/update")
+	@PutMapping(value="/update")
 	public ResponseEntity<Response> updateNote(@RequestBody Note note,HttpServletRequest request)
 	{
-		LOGGER.info("Post Request for updating Note");
+		LOGGER.info("Put Request for updating Note");
 		LOGGER.info("PARAMETERS : note = "+note);
 		
 		response = noteService.updateNote(note, request.getHeader("token"));
@@ -82,6 +82,36 @@ public class NoteController
 		LOGGER.info("Get Request for displaying Note");
 		
 		response = noteService.displayNotes(request.getHeader("token"));
+		return new ResponseEntity<>(response,response.getHttpStatus());
+	}
+	
+	@PutMapping(value="/pin/{noteId}")
+	public ResponseEntity<Response> pin(@PathVariable("noteId") String noteId)
+	{
+		LOGGER.info("Put Request to pin Note");
+		LOGGER.info("PARAMETERS : noteId = "+noteId);
+		
+		response = noteService.pin(noteId);
+		return new ResponseEntity<>(response,response.getHttpStatus());
+	}
+	
+	@PutMapping(value="/archieve/{noteId}")
+	public ResponseEntity<Response> archieve(@PathVariable("noteId") String noteId)
+	{
+		LOGGER.info("Put Request for archieving Note");
+		LOGGER.info("PARAMETERS : noteId = "+noteId);
+		
+		response = noteService.archieve(noteId);
+		return new ResponseEntity<>(response,response.getHttpStatus());
+	}
+	
+	@PutMapping(value="/trash/{noteId}")
+	public ResponseEntity<Response> trash(@PathVariable("noteId") String noteId)
+	{
+		LOGGER.info("Put Request to trash or restore Note");
+		LOGGER.info("PARAMETERS : noteId = "+noteId);
+		
+		response = noteService.trash(noteId);
 		return new ResponseEntity<>(response,response.getHttpStatus());
 	}
 }
