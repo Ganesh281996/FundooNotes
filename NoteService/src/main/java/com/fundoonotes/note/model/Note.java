@@ -1,5 +1,7 @@
 package com.fundoonotes.note.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,14 +27,17 @@ public class Note
 	private boolean inTrash;
 	
 	@DBRef
+	private List<Label> labels;
+	
+	@DBRef
 	private User user;
 
 	@Override
-	public String toString() 
+	public String toString()
 	{
 		return "Note [noteId=" + noteId + ", title=" + title + ", body=" + body + ", createdDate=" + createdDate
 				+ ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned=" + isPinned + ", isArchieved=" + isArchieved
-				+ ", inTrash=" + inTrash + ", user=" + user + "]";
+				+ ", inTrash=" + inTrash + ", labels=" + labels + ", user=" + user + "]";
 	}
 
 	public String getNoteId() {
@@ -97,6 +102,14 @@ public class Note
 
 	public void setInTrash(boolean inTrash) {
 		this.inTrash = inTrash;
+	}
+
+	public List<Label> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
 	}
 
 	public User getUser() {

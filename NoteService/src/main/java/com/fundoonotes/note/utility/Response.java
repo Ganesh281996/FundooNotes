@@ -1,4 +1,4 @@
-package com.fundoonotes.utility;
+package com.fundoonotes.note.utility;
 
 import org.springframework.http.HttpStatus;
 

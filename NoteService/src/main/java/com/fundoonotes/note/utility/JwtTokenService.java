@@ -1,4 +1,4 @@
-package com.fundoonotes.utility;
+package com.fundoonotes.note.utility;
 
 import java.util.Date;
 import java.util.logging.Logger;

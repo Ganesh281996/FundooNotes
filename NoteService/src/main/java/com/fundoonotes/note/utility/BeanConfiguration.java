@@ -1,9 +1,9 @@
-package com.fundoonotes;
+package com.fundoonotes.note.utility;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fundoonotes.utility.JwtTokenService;
+import com.fundoonotes.note.utility.JwtTokenService;
 
 @Configuration
 public class BeanConfiguration 

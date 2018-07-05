@@ -12,8 +12,8 @@ import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
-import com.fundoonotes.utility.JwtTokenService;
-import com.fundoonotes.utility.Response;
+import com.fundoonotes.note.utility.JwtTokenService;
+import com.fundoonotes.note.utility.Response;
 
 @Transactional
 @Service
@@ -51,7 +51,6 @@ public class NoteServiceImpl implements NoteService
 		}
 		catch(Exception exception)
 		{
-			exception.printStackTrace();
 			LOGGER.warning("Invalid Token unable to verify");
 			response.setMessage("Invalid Token unable to verify");
 			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
@@ -123,7 +122,6 @@ public class NoteServiceImpl implements NoteService
 		}
 		catch(Exception exception)
 		{
-			exception.printStackTrace();
 			LOGGER.warning("Invalid Token unable to verify");
 			response.setMessage("Invalid Token unable to verify");
 			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
@@ -158,23 +156,44 @@ public class NoteServiceImpl implements NoteService
 		}
 		catch(Exception exception)
 		{
-			exception.printStackTrace();
 			LOGGER.warning("Invalid Token unable to verify");
 			response.setMessage("Invalid Token unable to verify");
 			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
 			return response;
 		}
-		LOGGER.info("Displaying Notes");
-		response.setMessage("Displaying Notes");
-		response.setData(noteDao.findByUser_UserId(userId));
-		response.setHttpStatus(HttpStatus.OK);
-		return response;
+		try
+		{
+			response.setMessage("Displaying Notes");
+			LOGGER.info("Displaying Notes");
+			response.setData(noteDao.findByUser_UserId(userId));
+			response.setHttpStatus(HttpStatus.FOUND);
+			return response;
+		}
+		catch(Exception exception)
+		{
+			LOGGER.info("Unable to Display Notes ");
+			response.setMessage("Unable to Display Notes");
+			response.setHttpStatus(HttpStatus.NOT_FOUND);
+			return response;
+		}
 	}
 
 	@Override
-	public Response pin(String noteId) 
+	public Response pin(String noteId,String token) 
 	{
 		Response response = new Response();
+		try
+		{
+			jwtTokenService.verifyToken(token);
+			LOGGER.info("Token has been verified");
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Invalid Token unable to verify");
+			response.setMessage("Invalid Token unable to verify");
+			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			return response;
+		}
 		Note note = noteDao.findByNoteId(noteId);
 		if (note.isPinned())
 		{
@@ -189,6 +208,7 @@ public class NoteServiceImpl implements NoteService
 		else
 		{
 			note.setPinned(true);
+			note.setArchieved(false);
 			note = noteDao.save(note);
 			LOGGER.info("Note has been Pinned");
 			response.setMessage("Note has been Pinned");
@@ -199,9 +219,21 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public Response archieve(String noteId) 
+	public Response archieve(String noteId,String token) 
 	{
 		Response response = new Response();
+		try
+		{
+			jwtTokenService.verifyToken(token);
+			LOGGER.info("Token has been verified");
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Invalid Token unable to verify");
+			response.setMessage("Invalid Token unable to verify");
+			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			return response;
+		}
 		Note note = noteDao.findByNoteId(noteId);
 		if (note.isArchieved())
 		{
@@ -216,6 +248,7 @@ public class NoteServiceImpl implements NoteService
 		else
 		{
 			note.setArchieved(true);
+			note.setPinned(false);
 			note = noteDao.save(note);
 			LOGGER.info("Note has been added to Archieve");
 			response.setMessage("Note has been added to Archieve");
@@ -226,9 +259,21 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public Response trash(String noteId) 
+	public Response trash(String noteId,String token) 
 	{
 		Response response = new Response();
+		try
+		{
+			jwtTokenService.verifyToken(token);
+			LOGGER.info("Token has been verified");
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Invalid Token unable to verify");
+			response.setMessage("Invalid Token unable to verify");
+			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			return response;
+		}
 		Note note = noteDao.findByNoteId(noteId);
 		if (note.isInTrash())
 		{
@@ -243,6 +288,7 @@ public class NoteServiceImpl implements NoteService
 		else
 		{
 			note.setInTrash(true);
+			note.setPinned(false);
 			note = noteDao.save(note);
 			LOGGER.info("Note has been added to trash");
 			response.setMessage("Note has been added to trash");
@@ -250,5 +296,32 @@ public class NoteServiceImpl implements NoteService
 			response.setHttpStatus(HttpStatus.OK);
 			return response;
 		}
+	}
+
+	@Override
+	public Response addOrRemoveLabel(String noteId, String labelId,String token) 
+	{
+		Response response = new Response();
+		try
+		{
+			jwtTokenService.verifyToken(token);
+			LOGGER.info("Token has been verified");
+		}
+		catch(Exception exception)
+		{
+			LOGGER.warning("Invalid Token unable to verify");
+			response.setMessage("Invalid Token unable to verify");
+			response.setHttpStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+			return response;
+		}
+		try
+		{
+			
+		}
+		catch(Exception exception)
+		{
+			
+		}
+		return null;
 	}
 }
