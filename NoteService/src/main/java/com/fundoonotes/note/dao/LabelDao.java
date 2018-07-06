@@ -11,4 +11,6 @@ import com.fundoonotes.note.model.Label;
 public interface LabelDao extends MongoRepository<Label, String> 
 {
 	List<Label> findByUser_UserId(String userId);
+	
+	Label findByLabelId(String labelId);
 }

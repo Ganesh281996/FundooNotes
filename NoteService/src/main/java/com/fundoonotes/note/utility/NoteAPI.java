@@ -13,5 +13,5 @@ public class NoteAPI
 	public static final String ARCHIEVE = "/archieve/{noteId}";
 	public static final String TRASH = "/trash/{noteId}";
 	
-	public static final String ADD_OR_REMOVE_LABEL = "/addremovelabel/{noteId}?{labelId}";
+	public static final String ADD_LABEL = "/addlabel/{noteId}/{labelId}";
 }

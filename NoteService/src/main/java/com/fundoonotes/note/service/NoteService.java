@@ -17,5 +17,5 @@ public interface NoteService
 	Response archieve(String noteId,String token);
 	Response trash(String noteId,String token);
 	
-	Response addOrRemoveLabel(String noteId,String labelId,String token);
+	Response addLabel(String noteId,String labelId,String token);
 }

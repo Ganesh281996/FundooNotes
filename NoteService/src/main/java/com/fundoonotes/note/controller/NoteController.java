@@ -115,14 +115,14 @@ public class NoteController
 		response = noteService.trash(noteId,request.getHeader("token"));
 		return new ResponseEntity<>(response,response.getHttpStatus());
 	}
-	@PutMapping(value=NoteAPI.ADD_OR_REMOVE_LABEL)
-	public ResponseEntity<Response> addOrRemoveLabel(@PathVariable("noteId") String noteId,
+	@PutMapping(value=NoteAPI.ADD_LABEL)
+	public ResponseEntity<Response> addLabel(@PathVariable("noteId") String noteId,
 			@PathVariable("labelId") String labelId,HttpServletRequest request)
 	{
-		LOGGER.info("Put Request for adding or removing Label to Note in URL : "+NoteAPI.ADD_OR_REMOVE_LABEL);
-		LOGGER.info("PARAMETERS : noteId = "+noteId);
+		LOGGER.info("Put Request for adding or removing Label to Note in URL : "+NoteAPI.ADD_LABEL);
+		LOGGER.info("PARAMETERS : noteId = "+noteId+" labelId = "+labelId);
 		
-		response = noteService.trash(noteId,request.getHeader("token"));
+		response = noteService.addLabel(noteId, labelId, request.getHeader("token"));
 		return new ResponseEntity<>(response,response.getHttpStatus());
 	}
 }

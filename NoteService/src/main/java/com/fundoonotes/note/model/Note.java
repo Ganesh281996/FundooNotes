@@ -26,7 +26,7 @@ public class Note
 	
 	private boolean inTrash;
 	
-	@DBRef
+	@DBRef(lazy = true)
 	private List<Label> labels;
 	
 	@DBRef

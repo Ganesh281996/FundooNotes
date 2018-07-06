@@ -2,14 +2,18 @@ package com.fundoonotes.note.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
+import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
 import com.fundoonotes.note.utility.JwtTokenService;
@@ -28,6 +32,9 @@ public class NoteServiceImpl implements NoteService
 
 	@Autowired
 	Userdao userDao;	
+	
+	@Autowired
+	LabelDao labelDao;
 
 	@Autowired
 	JwtTokenService jwtTokenService;
@@ -299,9 +306,14 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public Response addOrRemoveLabel(String noteId, String labelId,String token) 
+	public Response addLabel(String noteId, String labelId,String token) 
 	{
 		Response response = new Response();
+		Label label = null;
+		Note note = null;
+		List<Note> notes = null;
+		List<Label> labels = null;
+		
 		try
 		{
 			jwtTokenService.verifyToken(token);
@@ -316,12 +328,40 @@ public class NoteServiceImpl implements NoteService
 		}
 		try
 		{
+			note = noteDao.findByNoteId(noteId);
+			label = labelDao.findByLabelId(labelId);
+			System.out.println(note);
+			System.out.println(label);
 			
+			if(note.getLabels() == null || label.getNotes() == null )
+			{
+				labels = new LinkedList<>();
+				notes = new LinkedList<>();
+			}
+			else
+			{
+				labels = note.getLabels();
+				notes = label.getNotes();
+			}
+			labels.add(label);
+			notes.add(note);
+			note.setLabels(labels);
+			label.setNotes(notes);
+			note = noteDao.save(note);
+			label = labelDao.save(label);
+			LOGGER.info("Label has been added to Note");
+			response.setMessage("Label has been added to Note");
+//			response.setData(note);
+			response.setHttpStatus(HttpStatus.OK);
+			return response;
 		}
 		catch(Exception exception)
 		{
-			
+			exception.printStackTrace();
+			LOGGER.info("Unable to add Label to Note");
+			response.setMessage("Unable to add Label to Note");
+			response.setHttpStatus(HttpStatus.BAD_REQUEST);
+			return response;
 		}
-		return null;
 	}
 }

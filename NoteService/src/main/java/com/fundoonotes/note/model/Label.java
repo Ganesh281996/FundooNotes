@@ -1,5 +1,7 @@
 package com.fundoonotes.note.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -16,11 +18,14 @@ public class Label
 	
 	@DBRef
 	private User user;
+	
+	@DBRef(lazy = true)
+	private List<Note> notes;
 
 	@Override
-	public String toString() 
+	public String toString()
 	{
-		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", user=" + user + "]";
+		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", user=" + user + ", notes=" + notes + "]";
 	}
 
 	public String getLabelId() {
@@ -45,5 +50,13 @@ public class Label
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
 	}
 }

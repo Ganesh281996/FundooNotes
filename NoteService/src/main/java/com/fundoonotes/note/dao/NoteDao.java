@@ -12,5 +12,6 @@ public interface NoteDao extends MongoRepository<Note, String>
 {	
 	List<Note> findByUser_UserId(String userId);
 	Note findByNoteId(String noteId);
-	List<Note> findByLabel_LabelId(String labelId);
+	List<Note> findByLabels_LabelId(String labelId);
+	
 }
