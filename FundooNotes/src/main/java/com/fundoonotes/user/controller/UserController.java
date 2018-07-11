@@ -32,9 +32,6 @@ public class UserController
 	@Autowired
 	RabbitTemplate rabbitTemplate;
 	
-	@Autowired
-	RedisTemplate<String, User> redisTemplate;
-	
 	Response response;
 	
 	private static final Logger LOGGER=Logger.getLogger(UserController.class.getName());

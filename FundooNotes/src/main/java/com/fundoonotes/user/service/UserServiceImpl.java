@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fundoonotes.user.model.User;
+import com.fundoonotes.user.repository.RedisRepository;
 import com.fundoonotes.user.repository.UserDao;
 import com.fundoonotes.utility.EmailService;
 import com.fundoonotes.utility.JwtTokenService;
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService
 	
 	Response response;
 	
+	@Autowired
+	RedisRepository redisRepository;
+	
 	private static final Logger LOGGER=Logger.getLogger(UserServiceImpl.class.getName());
 	
 	@Override
@@ -46,6 +50,8 @@ public class UserServiceImpl implements UserService
 		try
 		{
 			user=userDao.save(user);
+			redisRepository.save(user);
+			System.out.println(redisRepository.getAllUsers());
 			LOGGER.info("User Registered Successfully . Verification status = false");
 		}
 		catch(Exception exception)
@@ -94,6 +100,7 @@ public class UserServiceImpl implements UserService
 		{
 			user.setVerified(true);
 			userDao.save(user);
+			redisRepository.save(user);
 			LOGGER.info("User Email has been Verified");
 			response.setMessage("User Email has been verified");
 			response.setHttpStatus(HttpStatus.OK);
@@ -185,6 +192,7 @@ public class UserServiceImpl implements UserService
 		{
 			user.setPassword(bCryptPasswordEncoder.encode(password1));
 			userDao.save(user);
+			redisRepository.save(user);
 			LOGGER.info("Password has been changed");
 			response.setMessage("Password has been changed");
 			response.setHttpStatus(HttpStatus.OK);

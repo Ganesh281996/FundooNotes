@@ -1,5 +1,7 @@
 package com.fundoonotes.user.model;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -13,8 +15,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "Users")
-public class User 
+public class User implements Serializable
 {
+	private static final long serialVersionUID = 7267769044647652333L;
+
 	@Id
 	private String _id;
 

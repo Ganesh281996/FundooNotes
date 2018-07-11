@@ -16,6 +16,10 @@ public class Note
 	
 	private String body;
 	
+	private String colour = "white";
+	
+	private String remainder;
+	
 	private String createdDate;
 	
 	private String lastUpdatedDate;
@@ -25,6 +29,8 @@ public class Note
 	private boolean isArchieved;
 	
 	private boolean inTrash;
+	
+	
 	
 	@DBRef(lazy = true)
 	private List<Label> labels;

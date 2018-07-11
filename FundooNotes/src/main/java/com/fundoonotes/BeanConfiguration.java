@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.fundoonotes.user.model.User;
+
 import com.fundoonotes.utility.EmailService;
 import com.fundoonotes.utility.JwtTokenService;
 
@@ -38,16 +38,16 @@ public class BeanConfiguration
 	 }
 	
 	@Bean
-	public JedisConnectionFactory getJedisConnectionFactory()
+	public JedisConnectionFactory jedisConnectionFactory()
 	{
 		return new JedisConnectionFactory();
 	}
 	
 	@Bean
-	public RedisTemplate<String, User> getRedisTemplate()
+	public RedisTemplate<String, Object> redisTemplate()
 	{
-		RedisTemplate<String, User> redisTemplate=new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(getJedisConnectionFactory());
+		RedisTemplate<String, Object> redisTemplate=new RedisTemplate<>();
+		redisTemplate.setConnectionFactory(jedisConnectionFactory());
 		redisTemplate.setEnableTransactionSupport(true);
 		return redisTemplate;
 	}
