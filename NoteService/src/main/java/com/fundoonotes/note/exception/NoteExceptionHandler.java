@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.Response;
 import com.mongodb.MongoException;
 
 import io.jsonwebtoken.ExpiredJwtException;

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.service.LabelService;
-import com.fundoonotes.note.utility.LabelAPI;
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.LabelAPI;
+import com.fundoonotes.utility.Response;
 
 @RestController
 @RequestMapping(value=LabelAPI.LABEL)

@@ -2,7 +2,7 @@ package com.fundoonotes.note.service;
 
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.Response;
 
 public interface NoteService 
 {
@@ -17,5 +17,5 @@ public interface NoteService
 	Response archieve(String noteId,String token);
 	Response trash(String noteId,String token);
 	
-	Response addLabel(String noteId,String labelId,String token);
+	Response label(String noteId,String labelId,String token);
 }

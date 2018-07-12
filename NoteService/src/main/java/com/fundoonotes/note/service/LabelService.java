@@ -1,7 +1,7 @@
 package com.fundoonotes.note.service;
 
 import com.fundoonotes.note.model.Label;
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.Response;
 
 public interface LabelService 
 {

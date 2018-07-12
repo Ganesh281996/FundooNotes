@@ -10,8 +10,6 @@ import com.fundoonotes.note.model.Note;
 @Repository
 public interface NoteDao extends MongoRepository<Note, String> 
 {	
-	List<Note> findByUser_UserId(String userId);
+	List<Note> findByOwnerId(String ownerId);
 	Note findByNoteId(String noteId);
-	List<Note> findByLabels_LabelId(String labelId);
-	
 }

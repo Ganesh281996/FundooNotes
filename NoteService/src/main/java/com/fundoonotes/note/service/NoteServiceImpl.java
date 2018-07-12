@@ -1,8 +1,8 @@
 package com.fundoonotes.note.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,8 @@ import com.fundoonotes.note.dao.Userdao;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
-import com.fundoonotes.note.utility.JwtTokenService;
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.JwtTokenService;
+import com.fundoonotes.utility.Response;
 
 @Transactional
 @Service
@@ -54,7 +54,7 @@ public class NoteServiceImpl implements NoteService
 		String userId = jwtTokenService.verifyToken(token);
 		LOGGER.info("Token has been verified");
 		
-		note.setUser(userDao.findByUserId(userId));
+		note.setOwnerId(userId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
 		note = noteDao.save(note);
 		LOGGER.info("Note has been saved");
@@ -107,7 +107,7 @@ public class NoteServiceImpl implements NoteService
 		String userId = jwtTokenService.verifyToken(token);
 		LOGGER.info("Token has been verified");
 		
-		response.setData(noteDao.findByUser_UserId(userId));
+		response.setData(noteDao.findByOwnerId(userId));
 		response.setMessage("Displaying Notes");
 		LOGGER.info("Displaying Notes");
 		response.setHttpStatus(HttpStatus.FOUND);
@@ -217,14 +217,14 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public Response addLabel(String noteId, String labelId,String token) 
+	public Response label(String noteId, String labelId,String token) 
 	{
 		Response response = new Response();
 		
 		Label label = null;
 		Note note = null;
-		List<Note> notes = null;
-		List<Label> labels = null;
+		List<String> notes = null;
+		List<String> labels = null;
 		
 		jwtTokenService.verifyToken(token);
 		LOGGER.info("Token has been verified");
@@ -234,25 +234,36 @@ public class NoteServiceImpl implements NoteService
 		
 		if(note.getLabels() == null || label.getNotes() == null )
 		{
-			labels = new LinkedList<>();
-			notes = new LinkedList<>();
+			labels = new ArrayList<>();
+			notes = new ArrayList<>();
 		}
 		else
 		{
 			labels = note.getLabels();
 			notes = label.getNotes();
 		}
-		labels.add(label);
-		notes.add(note);
+		
+		if(labels.contains(noteId) && notes.contains(labelId))
+		{
+			labels.remove(noteId);
+			notes.remove(labelId);
+			LOGGER.info("Label has been removed from Note");
+			response.setMessage("Label has been removed from Note");
+		}
+		else
+		{
+			labels.add(label.getLabelId());
+			notes.add(note.getNoteId());
+			LOGGER.info("Label has been added to Note");
+			response.setMessage("Label has been added to Note");
+		}
 		
 		note.setLabels(labels);
 		label.setNotes(notes);
 		
 		note = noteDao.save(note);
 		label = labelDao.save(label);
-		LOGGER.info("Label has been added to Note");
 		
-		response.setMessage("Label has been added to Note");
 		response.setHttpStatus(HttpStatus.OK);
 		return response;
 	}

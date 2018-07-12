@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
 import com.fundoonotes.note.service.NoteService;
-import com.fundoonotes.note.utility.NoteAPI;
-import com.fundoonotes.note.utility.JwtTokenService;
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.JwtTokenService;
+import com.fundoonotes.utility.NoteAPI;
+import com.fundoonotes.utility.Response;
 
 @RestController
 @RequestMapping(value=NoteAPI.NOTE)
@@ -115,14 +115,15 @@ public class NoteController
 		response = noteService.trash(noteId,request.getHeader("token"));
 		return new ResponseEntity<>(response,response.getHttpStatus());
 	}
-	@PutMapping(value=NoteAPI.ADD_LABEL)
+	
+	@PutMapping(value=NoteAPI.LABEL)
 	public ResponseEntity<Response> addLabel(@PathVariable("noteId") String noteId,
 			@PathVariable("labelId") String labelId,HttpServletRequest request)
 	{
-		LOGGER.info("Put Request for adding or removing Label to Note in URL : "+NoteAPI.ADD_LABEL);
+		LOGGER.info("Put Request for adding or removing Label to Note in URL : "+NoteAPI.LABEL);
 		LOGGER.info("PARAMETERS : noteId = "+noteId+" labelId = "+labelId);
 		
-		response = noteService.addLabel(noteId, labelId, request.getHeader("token"));
+		response = noteService.label(noteId, labelId, request.getHeader("token"));
 		return new ResponseEntity<>(response,response.getHttpStatus());
 	}
 }

@@ -1,9 +1,9 @@
 package com.fundoonotes.note.model;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="Notes")
@@ -18,32 +18,31 @@ public class Note
 	
 	private String colour = "white";
 	
-	private String remainder;
+	private Date remainder;
 	
 	private String createdDate;
 	
 	private String lastUpdatedDate;
 	
-	private boolean isPinned;
+	private boolean isPinned = false;
 	
-	private boolean isArchieved;
+	private boolean isArchieved = false;
 	
-	private boolean inTrash;
+	private boolean inTrash = false;
 	
+	private String ownerId;
 	
+	private List<String> labels;
 	
-	@DBRef(lazy = true)
-	private List<Label> labels;
-	
-	@DBRef
-	private User user;
+	private List<String> collaborators;
 
 	@Override
-	public String toString()
+	public String toString() 
 	{
-		return "Note [noteId=" + noteId + ", title=" + title + ", body=" + body + ", createdDate=" + createdDate
-				+ ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned=" + isPinned + ", isArchieved=" + isArchieved
-				+ ", inTrash=" + inTrash + ", labels=" + labels + ", user=" + user + "]";
+		return "Note [noteId=" + noteId + ", title=" + title + ", body=" + body + ", colour=" + colour + ", remainder="
+				+ remainder + ", createdDate=" + createdDate + ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned="
+				+ isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId=" + ownerId
+				+ ", labels=" + labels + ", collaborators=" + collaborators + "]";
 	}
 
 	public String getNoteId() {
@@ -68,6 +67,22 @@ public class Note
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public String getColour() {
+		return colour;
+	}
+
+	public void setColour(String colour) {
+		this.colour = colour;
+	}
+
+	public Date getRemainder() {
+		return remainder;
+	}
+
+	public void setRemainder(Date remainder) {
+		this.remainder = remainder;
 	}
 
 	public String getCreatedDate() {
@@ -110,19 +125,27 @@ public class Note
 		this.inTrash = inTrash;
 	}
 
-	public List<Label> getLabels() {
+	public String getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
+	}
+
+	public List<String> getLabels() {
 		return labels;
 	}
 
-	public void setLabels(List<Label> labels) {
+	public void setLabels(List<String> labels) {
 		this.labels = labels;
 	}
 
-	public User getUser() {
-		return user;
+	public List<String> getCollaborators() {
+		return collaborators;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setCollaborators(List<String> collaborators) {
+		this.collaborators = collaborators;
 	}
 }

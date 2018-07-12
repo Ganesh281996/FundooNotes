@@ -11,8 +11,8 @@ import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
 import com.fundoonotes.note.model.Label;
-import com.fundoonotes.note.utility.JwtTokenService;
-import com.fundoonotes.note.utility.Response;
+import com.fundoonotes.utility.JwtTokenService;
+import com.fundoonotes.utility.Response;
 
 @Transactional
 @Service
@@ -40,7 +40,7 @@ public class LabelServiceImpl implements LabelService
 		String userId = jwtTokenService.verifyToken(token);
 		LOGGER.info("Token has been verified");
 		
-		label.setUser(userDao.findByUserId(userId));
+		label.setUserId(userId);
 		label = labelDao.save(label);
 		LOGGER.info("Saved Label");
 		
@@ -94,7 +94,7 @@ public class LabelServiceImpl implements LabelService
 		response.setMessage("Displaying Labels");
 		LOGGER.info("Displaying Labels");
 		
-		response.setData(labelDao.findByUser_UserId(userId));
+		response.setData(labelDao.findByUserId(userId));
 		response.setHttpStatus(HttpStatus.FOUND);
 		return response;
 	}

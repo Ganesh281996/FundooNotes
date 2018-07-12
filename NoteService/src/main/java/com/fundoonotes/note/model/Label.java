@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Labels")
@@ -16,16 +15,15 @@ public class Label
 	@Indexed(unique = true)
 	private String labelName;
 	
-	@DBRef
-	private User user;
+	private String userId;
 	
-	@DBRef(lazy = true)
-	private List<Note> notes;
+	private List<String> notes;
 
 	@Override
-	public String toString()
+	public String toString() 
 	{
-		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", user=" + user + ", notes=" + notes + "]";
+		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", userId=" + userId + ", notes=" + notes
+				+ "]";
 	}
 
 	public String getLabelId() {
@@ -44,19 +42,19 @@ public class Label
 		this.labelName = labelName;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public List<Note> getNotes() {
+	public List<String> getNotes() {
 		return notes;
 	}
 
-	public void setNotes(List<Note> notes) {
+	public void setNotes(List<String> notes) {
 		this.notes = notes;
 	}
 }

@@ -1,4 +1,4 @@
-package com.fundoonotes.note.utility;
+package com.fundoonotes.utility;
 
 public class LabelAPI 
 {
