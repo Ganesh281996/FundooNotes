@@ -7,9 +7,10 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude=SecurityAutoConfiguration.class)
-public class NoteServiceApplication {
-
-	public static void main(String[] args) {
+public class NoteServiceApplication 
+{
+	public static void main(String[] args) 
+	{
 		SpringApplication.run(NoteServiceApplication.class, args);
 	}
 }

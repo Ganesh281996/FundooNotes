@@ -30,10 +30,9 @@ public class CollaboratorServiceImpl implements CollaboratorService
 	JwtTokenService jwtTokenService;
 	
 	@Override
-	public Response addCollaborator(String noteId, String sharedBy, String sharedTo) 
-	{
-		Response response = new Response();
-				
+	public void addCollaborator(String noteId, String sharedTo,String ownerId) 
+	{		
+		String sharedBy = jwtTokenService.verifyToken(ownerId);
 		Note note = noteDao.findByNoteId(noteId);
 		List<String> collaborators = note.getCollaborators();
 		
@@ -50,10 +49,25 @@ public class CollaboratorServiceImpl implements CollaboratorService
 		collaborators.add(collaborator.getCollaboratorId());
 		note.setCollaborators(collaborators);
 		noteDao.save(note);
+	}
+
+	@Override
+	public List<String> getCollaborators(String noteId,String token) 
+	{
+		Note note = noteDao.findByNoteId(noteId);
+		List<String> collaborators = note.getCollaborators();
 		
-		response.setData(note);
-		response.setMessage("Collaborator has been added to note");
-		response.setHttpStatus(HttpStatus.OK);
-		return response;
+		return collaborators;
+	}
+
+	@Override
+	public void removeCollaborator(String noteId, String collaboratorId,String token) 
+	{
+		Note note = noteDao.findByNoteId(noteId);
+		List<String> collaborators = note.getCollaborators();
+		collaborators.remove(collaboratorId);
+		note.setCollaborators(collaborators);
+		noteDao.save(note);
+		collaboratorDao.deleteByCollaboratorId(collaboratorId);
 	}
 }

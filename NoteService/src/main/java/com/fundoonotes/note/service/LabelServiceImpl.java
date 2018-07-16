@@ -1,9 +1,9 @@
 package com.fundoonotes.note.service;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +12,6 @@ import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.utility.JwtTokenService;
-import com.fundoonotes.utility.Response;
 
 @Transactional
 @Service
@@ -33,69 +32,34 @@ public class LabelServiceImpl implements LabelService
 	JwtTokenService jwtTokenService;
 
 	@Override
-	public Response create(Label label,String token) 
+	public Label create(Label label,String ownerId) 
 	{
-		Response response = new Response();
-		
-		String userId = jwtTokenService.verifyToken(token);
-		LOGGER.info("Token has been verified");
-		
-		label.setUserId(userId);
+		label.setUserId(ownerId);
 		label = labelDao.save(label);
 		LOGGER.info("Saved Label");
-		
-		response.setMessage("Saved Label");
-		response.setData(label);
-		response.setHttpStatus(HttpStatus.CREATED);
-		return response;
+		return label;
 	}
 
 	@Override
-	public Response update(Label label,String token) 
-	{
-		Response response = new Response();
-		
-		jwtTokenService.verifyToken(token);
-		LOGGER.info("Token has been verified");
-		
+	public Label update(Label label,String ownerId) 
+	{	
 		label = labelDao.save(label);
 		LOGGER.info("Updated Label");
 		
-		response.setMessage("Updated Label");
-		response.setData(label);
-		response.setHttpStatus(HttpStatus.CREATED);
-		return response;
+		return label;
 	}
 
 	@Override
-	public Response delete(String labelId,String token) 
+	public void delete(String labelId,String ownerId) 
 	{
-		Response response = new Response();
-		
-		jwtTokenService.verifyToken(token);
-		LOGGER.info("Token has been verified");
-		
 		labelDao.deleteById(labelId);
 		LOGGER.info("Deleted Label");
-		
-		response.setMessage("Deleted Label");
-		response.setHttpStatus(HttpStatus.CREATED);
-		return response;
 	}
 
 	@Override
-	public Response read(String token) 
+	public List<Label> read(String ownerId) 
 	{
-		Response response = new Response();
-		
-		String userId = jwtTokenService.verifyToken(token);
-		LOGGER.info("Token has been verified");
-		
-		response.setMessage("Displaying Labels");
 		LOGGER.info("Displaying Labels");
-		
-		response.setData(labelDao.findByUserId(userId));
-		response.setHttpStatus(HttpStatus.FOUND);
-		return response;
+		return labelDao.findByUserId(ownerId);
 	}
 }

@@ -1,5 +1,8 @@
 package com.fundoonotes.note.service;
 
+import java.util.List;
+
+import com.fundoonotes.note.dto.NoteDTO;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
 import com.fundoonotes.utility.Response;
@@ -8,14 +11,14 @@ public interface NoteService
 {
 	Response createDummyUser(User user);
 	
-	Response createNote(Note note,String token);
-	Response updateNote(Note note,String token);
-	Response deleteNote(String noteId,String token);
-	Response displayNotes(String token);
+	Note createNote(NoteDTO createNoteDTO,String ownerId);
+	Note updateNote(Note note,String ownerId);
+	void deleteNote(String noteId,String ownerId);
+	List<Note> displayNotes(String ownerId);
 	
-	Response pin(String noteId,String token);
-	Response archieve(String noteId,String token);
-	Response trash(String noteId,String token);
+	void pin(String noteId,String ownerId);
+	void archieve(String noteId,String ownerId);
+	void trash(String noteId,String ownerId);
 	
-	Response label(String noteId,String labelId,String token);
+	void label(String noteId,String labelId,String ownerId);
 }

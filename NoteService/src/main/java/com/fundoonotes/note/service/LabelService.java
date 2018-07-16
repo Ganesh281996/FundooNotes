@@ -1,12 +1,13 @@
 package com.fundoonotes.note.service;
 
+import java.util.List;
+
 import com.fundoonotes.note.model.Label;
-import com.fundoonotes.utility.Response;
 
 public interface LabelService 
 {
-	Response create(Label label,String token);
-	Response update(Label label,String token);
-	Response delete(String labelId,String token);
-	Response read(String token);
+	Label create(Label label,String ownerId);
+	Label update(Label label,String ownerId);
+	void delete(String labelId,String ownerId);
+	List<Label> read(String ownerId);
 }

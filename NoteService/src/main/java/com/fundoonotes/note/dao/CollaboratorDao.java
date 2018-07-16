@@ -8,5 +8,5 @@ import com.fundoonotes.note.model.Collaborator;
 @Repository
 public interface CollaboratorDao extends MongoRepository<Collaborator, String> 
 {
-
+	void deleteByCollaboratorId(String collaboratorId);
 }

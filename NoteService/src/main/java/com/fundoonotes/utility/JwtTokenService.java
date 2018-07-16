@@ -13,29 +13,29 @@ public class JwtTokenService
 	private static final String KEY = "nothing";
 	private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 	
-	public String getJwtToken(String _id)
+	public String getJwtToken(String ownerId)
 	{
 		String token=Jwts.builder()
-				.setSubject(_id)
+				.setSubject(ownerId)
 				.claim("roles", "user")
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis()+36000000))
 				.signWith(SIGNATURE_ALGORITHM, KEY)
 				.compact();
-		LOGGER.info("Token has been generated with Users ID : "+_id);
+		LOGGER.info("Token has been generated with OwnerID : "+ownerId);
 		LOGGER.info("Token : "+token);
 		return token;
 	}
 	
 	public String verifyToken(String token)
 	{
-		String userId=Jwts.parser()
+		String ownerId=Jwts.parser()
 				.setSigningKey(KEY)
 				.parseClaimsJws(token)
 				.getBody()
 				.getSubject();
 		LOGGER.info("Given Token : "+token+" has been verified");
-		LOGGER.info("Token returns User ID : "+userId);
-		return userId;
+		LOGGER.info("Token returns OwnerID : "+ownerId);
+		return ownerId;
 	}
 }
