@@ -2,6 +2,7 @@ package com.fundoonotes.user.service;
 
 import java.util.logging.Logger;
 
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fundoonotes.user.model.Mail;
 import com.fundoonotes.user.model.User;
 import com.fundoonotes.user.repository.RedisRepository;
 import com.fundoonotes.user.repository.UserDao;
@@ -37,8 +39,11 @@ public class UserServiceImpl implements UserService
 	
 	Response response;
 	
+//	@Autowired
+//	RedisRepository redisRepository;
+	
 	@Autowired
-	RedisRepository redisRepository;
+	AmqpTemplate amqpTemplate;
 	
 	private static final Logger LOGGER=Logger.getLogger(UserServiceImpl.class.getName());
 	
@@ -50,8 +55,8 @@ public class UserServiceImpl implements UserService
 		try
 		{
 			user=userDao.save(user);
-			redisRepository.save(user);
-			System.out.println(redisRepository.getAllUsers());
+//			redisRepository.save(user);
+//			System.out.println(redisRepository.getAllUsers());
 			LOGGER.info("User Registered Successfully . Verification status = false");
 		}
 		catch(Exception exception)
@@ -64,13 +69,19 @@ public class UserServiceImpl implements UserService
 		String token=jwtTokenService.getJwtToken(user.get_id());
 		try
 		{
-			emailService.sendEmail("<a href ='http://localhost:8080/user/activateuser/"+token+"'>Verify Email</a>",user.getEmail());
+			Mail mail = new Mail();
+			mail.setTo(user.getEmail());
+			mail.setSubject("Verification Email");
+			mail.setText("<a href ='http://localhost:8080/user/activateuser/"+token+"'>Verify Email</a>");
+			amqpTemplate.convertAndSend("mailexchange", "mailkey", mail);
+//			emailService.sendEmail("<a href ='http://localhost:8080/user/activateuser/"+token+"'>Verify Email</a>",user.getEmail());
 			response.setMessage("Verification Email has been Sent");
 			response.setHttpStatus(HttpStatus.OK);
 			return response;
 		}
 		catch(Exception exception)
 		{
+			exception.printStackTrace();
 			LOGGER.warning("Unable to send Email");
 			response.setMessage("Unable to send Email");
 			response.setHttpStatus(HttpStatus.BAD_REQUEST);
@@ -100,7 +111,7 @@ public class UserServiceImpl implements UserService
 		{
 			user.setVerified(true);
 			userDao.save(user);
-			redisRepository.save(user);
+//			redisRepository.save(user);
 			LOGGER.info("User Email has been Verified");
 			response.setMessage("User Email has been verified");
 			response.setHttpStatus(HttpStatus.OK);
@@ -149,7 +160,12 @@ public class UserServiceImpl implements UserService
 		String token = jwtTokenService.getJwtToken(user.get_id());
 		try
 		{
-			emailService.sendEmail("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>", email);
+			Mail mail = new Mail();
+			mail.setTo(email);
+			mail.setSubject("Verification Email");
+			mail.setText("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>");
+			amqpTemplate.convertAndSend("MailExchange", "MailKey", mail);
+//			emailService.sendEmail("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>", email);
 			response.setMessage("Email has been Sent");
 			response.setHttpStatus(HttpStatus.OK);
 			return response;
@@ -192,7 +208,7 @@ public class UserServiceImpl implements UserService
 		{
 			user.setPassword(bCryptPasswordEncoder.encode(password1));
 			userDao.save(user);
-			redisRepository.save(user);
+//			redisRepository.save(user);
 			LOGGER.info("Password has been changed");
 			response.setMessage("Password has been changed");
 			response.setHttpStatus(HttpStatus.OK);

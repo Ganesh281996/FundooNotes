@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fundoonotes.note.dao.ElasticSearchDao;
+//import com.fundoonotes.note.dao.ElasticSearchDao;
 import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
@@ -20,7 +23,6 @@ import com.fundoonotes.note.exception.NoteNotFoundException;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
-import com.fundoonotes.utility.JwtTokenService;
 import com.fundoonotes.utility.Response;
 
 @Transactional
@@ -32,20 +34,20 @@ public class NoteServiceImpl implements NoteService
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/YYYY  hh:mm:ss");
 
 	@Autowired
-	NoteDao noteDao;
+	private NoteDao noteDao;
 
 	@Autowired
-	Userdao userDao;	
+	private Userdao userDao;	
 
 	@Autowired
-	LabelDao labelDao;
+	private LabelDao labelDao;
 
 	@Autowired
-	JwtTokenService jwtTokenService;
+	private ModelMapper modelMapper;
 
 	@Autowired
-	ModelMapper modelMapper;
-
+	private ElasticSearchDao elasticSearchDao;
+	
 	@Override
 	public Response createDummyUser(User user) 
 	{
@@ -61,6 +63,7 @@ public class NoteServiceImpl implements NoteService
 		note.setOwnerId(ownerId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
 		note = noteDao.save(note);
+		elasticSearchDao.insertNote(note);
 		LOGGER.info("Note has been saved");
 
 		return note;
@@ -88,6 +91,13 @@ public class NoteServiceImpl implements NoteService
 	{
 		LOGGER.info("Displaying Notes");
 		return noteDao.findByOwnerId(ownerId);	
+	}
+	
+
+	@Override
+	public Map<String, Object> displayNotesByElasticSearch(String ownerId) 
+	{
+		return elasticSearchDao.getNoteByOwnerId(ownerId);
 	}
 
 	@Override

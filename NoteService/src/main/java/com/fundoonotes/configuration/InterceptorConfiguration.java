@@ -20,7 +20,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) 
 	{
-		registry.addInterceptor(userAuthenticationInterceptor).addPathPatterns("/note");
-		registry.addInterceptor(loggerInterceptor);
+		registry.addInterceptor(userAuthenticationInterceptor).addPathPatterns("/note/*");
+//		registry.addInterceptor(loggerInterceptor);
 	}
 }

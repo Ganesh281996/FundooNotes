@@ -1,6 +1,7 @@
 package com.fundoonotes.note.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fundoonotes.note.dto.NoteDTO;
 import com.fundoonotes.note.model.Note;
@@ -15,6 +16,8 @@ public interface NoteService
 	Note updateNote(Note note,String ownerId);
 	void deleteNote(String noteId,String ownerId);
 	List<Note> displayNotes(String ownerId);
+	
+	Map<String, Object> displayNotesByElasticSearch(String ownerId);
 	
 	void pin(String noteId,String ownerId);
 	void archieve(String noteId,String ownerId);

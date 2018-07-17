@@ -5,9 +5,12 @@ import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import com.fundoonotes.user.model.Mail;
 
 public class EmailService 
 {
@@ -16,13 +19,15 @@ public class EmailService
 	
 	private static final Logger LOGGER=Logger.getLogger(EmailService.class.getName());
 	
-	public void sendEmail(String url,String email) throws MessagingException
+	@RabbitListener(queues = "mailqueue")
+	public void sendEmail(Mail mail) throws MessagingException
 	{
 		MimeMessage message=javaMailSender.createMimeMessage();
 		MimeMessageHelper helper=new MimeMessageHelper(message);
-		helper.setTo(email);
-		helper.setText(url , true);
-		helper.setSubject("Subject");
+		System.out.println(mail);
+		helper.setTo(mail.getTo());
+		helper.setText(mail.getText() , true);
+		helper.setSubject(mail.getSubject());
 		javaMailSender.send(message);
 		LOGGER.info("Verification Email has been Sent");
 	}

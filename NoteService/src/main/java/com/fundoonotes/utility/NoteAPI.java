@@ -9,6 +9,8 @@ public class NoteAPI
 	public static final String DELETE = "/delete/{noteId}";
 	public static final String READ = "/read";
 	
+	public static final String READ_ELASTIC = "/readbyelastic";
+	
 	public static final String PIN = "/pin/{noteId}";
 	public static final String ARCHIEVE = "/archieve/{noteId}";
 	public static final String TRASH = "/trash/{noteId}";
