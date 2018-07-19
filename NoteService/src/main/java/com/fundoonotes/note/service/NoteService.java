@@ -17,7 +17,8 @@ public interface NoteService
 	void deleteNote(String noteId,String ownerId);
 	List<Note> displayNotes(String ownerId);
 	
-	Map<String, Object> displayNotesByElasticSearch(String ownerId);
+	List<Map<String, Note>> displayNotesByElasticSearch(String ownerId);
+	List<Map<String, Note>> displayNotesBySearch(String search);
 	
 	void pin(String noteId,String ownerId);
 	void archieve(String noteId,String ownerId);

@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +25,21 @@ import com.fundoonotes.note.exception.NoteNotFoundException;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
+import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.Response;
 
 @Transactional
 @Service
+@PropertySource(value = "classpath:exception.properties")
 public class NoteServiceImpl implements NoteService 
 {
 	private static final Logger LOGGER = Logger.getLogger(NoteServiceImpl.class.getName());
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/YYYY  hh:mm:ss");
 
+	@Autowired
+	Environment environment;
+	
 	@Autowired
 	private NoteDao noteDao;
 
@@ -48,6 +55,9 @@ public class NoteServiceImpl implements NoteService
 	@Autowired
 	private ElasticSearchDao elasticSearchDao;
 	
+	@Autowired
+	AuthorizeService authorizeService;
+	
 	@Override
 	public Response createDummyUser(User user) 
 	{
@@ -59,7 +69,7 @@ public class NoteServiceImpl implements NoteService
 	public Note createNote(NoteDTO createNoteDTO, String ownerId) 
 	{
 		Note note = modelMapper.map(createNoteDTO, Note.class);
-
+		
 		note.setOwnerId(ownerId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
 		note = noteDao.save(note);
@@ -72,6 +82,12 @@ public class NoteServiceImpl implements NoteService
 	@Override
 	public Note updateNote(Note note, String ownerId) 
 	{
+		if(!noteDao.existsById(note.getNoteId()))
+		{
+			throw new NoteNotFoundException(environment.getProperty("NoteNotFoundException"));
+		}
+		authorizeService.authorizeUserWithNote(ownerId, note.getNoteId());
+		
 		note.setLastUpdatedDate(DATE_FORMAT.format(new Date()));
 		note = noteDao.save(note);
 		LOGGER.info("Note has been updated");
@@ -81,8 +97,15 @@ public class NoteServiceImpl implements NoteService
 
 	@Override
 	public void deleteNote(String noteId, String ownerId) 
-	{		
+	{
+		if(!noteDao.existsById(noteId))
+		{
+			throw new NoteNotFoundException(environment.getProperty("NoteNotFoundException"));
+		}
+		authorizeService.authorizeUserWithNote(ownerId, noteId);
+		
 		noteDao.deleteById(noteId);
+		elasticSearchDao.deleteNote(noteId);
 		LOGGER.info("Note has been deleted");
 	}
 
@@ -95,9 +118,15 @@ public class NoteServiceImpl implements NoteService
 	
 
 	@Override
-	public Map<String, Object> displayNotesByElasticSearch(String ownerId) 
+	public List<Map<String, Note>> displayNotesByElasticSearch(String ownerId) 
 	{
 		return elasticSearchDao.getNoteByOwnerId(ownerId);
+	}
+	
+	@Override
+	public List<Map<String, Note>> displayNotesBySearch(String search) 
+	{
+		return elasticSearchDao.getNotesBySearch(search);
 	}
 
 	@Override
@@ -105,8 +134,9 @@ public class NoteServiceImpl implements NoteService
 	{
 		if(!noteDao.existsById(noteId))
 		{
-			throw new NoteNotFoundException("Note with NoteID = "+noteId+" was not Found");
+			throw new NoteNotFoundException(environment.getProperty("NoteNotFoundException"));
 		}
+		authorizeService.authorizeUserWithNote(ownerId, noteId);
 
 		Note note = noteDao.findByNoteId(noteId);
 		if (note.isPinned())
@@ -129,8 +159,9 @@ public class NoteServiceImpl implements NoteService
 	{
 		if(!noteDao.existsById(noteId))
 		{
-			throw new NoteNotFoundException("Note with NoteID = "+noteId+" was not Found");
+			throw new NoteNotFoundException(environment.getProperty("NoteNotFoundException"));
 		}
+		authorizeService.authorizeUserWithNote(ownerId, noteId);
 
 		Note note = noteDao.findByNoteId(noteId);
 		if (note.isArchieved())
@@ -155,6 +186,7 @@ public class NoteServiceImpl implements NoteService
 		{
 			throw new NoteNotFoundException("Note with NoteID = "+noteId+" was not Found");
 		}
+		authorizeService.authorizeUserWithNote(ownerId, noteId);
 
 		Note note = noteDao.findByNoteId(noteId);
 		if (note.isInTrash())
@@ -175,6 +207,8 @@ public class NoteServiceImpl implements NoteService
 	@Override
 	public void label(String noteId, String labelId,String ownerId) 
 	{
+		authorizeService.authorizeUserWithNote(ownerId, noteId);
+		
 		if(!noteDao.existsById(noteId))
 		{
 			throw new NoteNotFoundException("Note with NoteID = "+noteId+" was not Found");

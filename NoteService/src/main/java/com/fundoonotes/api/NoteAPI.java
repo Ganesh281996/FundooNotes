@@ -1,4 +1,4 @@
-package com.fundoonotes.utility;
+package com.fundoonotes.api;
 
 public class NoteAPI 
 {
@@ -9,7 +9,8 @@ public class NoteAPI
 	public static final String DELETE = "/delete/{noteId}";
 	public static final String READ = "/read";
 	
-	public static final String READ_ELASTIC = "/readbyelastic";
+	public static final String READ_ELASTIC_BY_ID = "/readelasticbyid";
+	public static final String READ_ELASTIC = "/readelasticbysearch/{search}";
 	
 	public static final String PIN = "/pin/{noteId}";
 	public static final String ARCHIEVE = "/archieve/{noteId}";

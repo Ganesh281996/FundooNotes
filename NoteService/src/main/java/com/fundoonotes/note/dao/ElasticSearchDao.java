@@ -1,12 +1,18 @@
 package com.fundoonotes.note.dao;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +22,9 @@ import com.fundoonotes.note.model.Note;
 @Repository
 public class ElasticSearchDao 
 {
-	private static final String INDEX = "elasticdatabase";
+	private static String INDEX = "elastic";
 	
-	private static final String TYPE = "note";
+	private static String TYPE = "note";
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -30,7 +36,7 @@ public class ElasticSearchDao
 	{
 		Map<Note, String> map = objectMapper.convertValue(note, Map.class);
 		
-		IndexRequest indexRequest = new IndexRequest(INDEX, TYPE, note.getOwnerId()).source(map);
+		IndexRequest indexRequest = new IndexRequest(INDEX, TYPE, note.getNoteId()).source(map);
 		
 		try 
 		{
@@ -42,18 +48,68 @@ public class ElasticSearchDao
 		}
 	}
 	
-	public Map<String, Object> getNoteByOwnerId(String ownerId)
+	public void deleteNote(String noteId)
 	{
-		GetRequest request = new GetRequest(INDEX, TYPE, ownerId);
-		GetResponse response = null;
+		DeleteRequest deleteRequest = new DeleteRequest(INDEX, TYPE, noteId);
 		try 
 		{
-			response = restHighLevelClient.get(request);
+			restHighLevelClient.delete(deleteRequest);
 		}
 		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}
-		return response.getSourceAsMap();
+	}
+	
+	public List<Map<String, Note>> getNoteByOwnerId(String ownerId)
+	{
+		SearchRequest searchRequest = searchRequest(INDEX, TYPE, "ownerId", ownerId);
+		SearchResponse searchResponse = null;
+		List<Map<String, Note>> notes = new LinkedList<>();
+		try 
+		{
+			searchResponse = restHighLevelClient.search(searchRequest);
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		SearchHit[] searchHits = searchResponse.getHits().getHits();
+		for(SearchHit searchHit : searchHits)
+		{
+			notes.add(objectMapper.convertValue(searchHit.getSourceAsMap(), Map.class));
+		}
+		return notes;
+	}
+	
+	public List<Map<String, Note>> getNotesBySearch(String search)
+	{
+		SearchRequest searchRequest = searchRequest(INDEX, TYPE, "noteId", search);
+		SearchResponse searchResponse = null;
+		List<Map<String, Note>> notes = new LinkedList<>();
+		try 
+		{
+			searchResponse = restHighLevelClient.search(searchRequest);
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		 SearchHit[] searchHits = searchResponse.getHits().getHits();
+		for(SearchHit searchHit : searchHits)
+		{
+			notes.add(objectMapper.convertValue(searchHit.getSourceAsMap(), Map.class));
+		}
+		return notes;
+	}
+	
+	private SearchRequest searchRequest(String index, String type, String field, String search) 
+	{
+	    SearchRequest searchRequest = new SearchRequest(index);
+	    searchRequest.types(type);
+	    SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+	    searchSourceBuilder.query(QueryBuilders.matchPhrasePrefixQuery(field, search));
+	    searchRequest.source(searchSourceBuilder);
+	    return searchRequest;
 	}
 }

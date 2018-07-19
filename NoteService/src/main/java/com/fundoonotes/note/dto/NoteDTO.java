@@ -9,13 +9,13 @@ public class NoteDTO
 	
 	private String body;
 	
-	private String colour;
+	private String colour = "white";
 	
 	private Date remainder;
 	
-	private boolean isPinned;
+	private boolean isPinned = false;
 	
-	private boolean isArchieved;
+	private boolean isArchieved = false;
 	
 	private List<String> collaborators;
 

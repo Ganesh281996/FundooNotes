@@ -66,28 +66,29 @@
 			<artifactId>modelmapper</artifactId>
 			<version>0.7.5</version>
 		</dependency>
-	
+
 		<!-- Elastic Search -->
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			</dependency>
+			<version>6.3.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-high-level-client</artifactId>
-			<version>6.1.2</version>
+			<version>6.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-client</artifactId>
-			<version>6.1.2</version>
+			<version>6.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>elasticsearch-rest-client-sniffer</artifactId>
-			<version>6.1.2</version>
+			<version>6.3.1</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>

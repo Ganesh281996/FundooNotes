@@ -1,6 +1,7 @@
 package com.fundoonotes.note.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fundoonotes.api.NoteAPI;
 import com.fundoonotes.note.dto.NoteDTO;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
 import com.fundoonotes.note.service.NoteService;
 import com.fundoonotes.utility.JwtTokenService;
-import com.fundoonotes.utility.NoteAPI;
 import com.fundoonotes.utility.Response;
 
 @RestController
@@ -34,7 +35,7 @@ public class NoteController
 	static
 	{
 		JwtTokenService jwtTokenService=new JwtTokenService();
-		String token = jwtTokenService.getJwtToken("5b3c575012b32521affe1abd");
+		String token = jwtTokenService.getJwtToken("5b47323b12b3253f929ad0b9");
 		System.out.println(token);
 	}
 	
@@ -78,10 +79,18 @@ public class NoteController
 		return new ResponseEntity<>(notes,HttpStatus.OK);
 	}
 	
-	@GetMapping(value=NoteAPI.READ_ELASTIC)
-	public ResponseEntity<List<Note>> displayNotesByElasticSearch(HttpServletRequest request)
+	@GetMapping(value=NoteAPI.READ_ELASTIC_BY_ID)
+	public ResponseEntity<List<Map<String, Note>>> displayNotesByElasticSearch(HttpServletRequest request)
 	{
-		List<Note> notes = noteService.displayNotes((String)request.getAttribute("ownerId"));
+		List<Map<String, Note>> notes = noteService.displayNotesByElasticSearch((String)request.getAttribute("ownerId"));
+		return new ResponseEntity<>(notes,HttpStatus.OK);
+	}
+	
+	@GetMapping(value=NoteAPI.READ_ELASTIC)
+	public ResponseEntity<List<Map<String, Note>>> displayNotesBySearch(@PathVariable("search") String search
+			,HttpServletRequest request)
+	{
+		List<Map<String, Note>> notes = noteService.displayNotesBySearch(search);
 		return new ResponseEntity<>(notes,HttpStatus.OK);
 	}
 	

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fundoonotes.api.LabelAPI;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.service.LabelService;
-import com.fundoonotes.utility.LabelAPI;
 import com.fundoonotes.utility.Response;
 
 @RestController
