@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fundoonotes.note.dao.ElasticSearchDao;
-//import com.fundoonotes.note.dao.ElasticSearchDao;
 import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
@@ -26,6 +24,7 @@ import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
 import com.fundoonotes.utility.AuthorizeService;
+import com.fundoonotes.utility.MapDTOService;
 import com.fundoonotes.utility.Response;
 
 @Transactional
@@ -50,13 +49,13 @@ public class NoteServiceImpl implements NoteService
 	private LabelDao labelDao;
 
 	@Autowired
-	private ModelMapper modelMapper;
-
-	@Autowired
 	private ElasticSearchDao elasticSearchDao;
 	
 	@Autowired
 	AuthorizeService authorizeService;
+	
+	@Autowired
+	MapDTOService mapDTOService;
 	
 	@Override
 	public Response createDummyUser(User user) 
@@ -68,7 +67,7 @@ public class NoteServiceImpl implements NoteService
 	@Override
 	public Note createNote(NoteDTO createNoteDTO, String ownerId) 
 	{
-		Note note = modelMapper.map(createNoteDTO, Note.class);
+		Note note = mapDTOService.NoteDtoToNote(createNoteDTO);
 		
 		note.setOwnerId(ownerId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
@@ -222,7 +221,7 @@ public class NoteServiceImpl implements NoteService
 		Label label = labelDao.findByLabelId(labelId);
 
 		List<String> notes = null;
-		List<String> labels = null;
+		List<Label> labels = null;
 
 		if(note.getLabels() == null || label.getNotes() == null )
 		{
@@ -235,15 +234,15 @@ public class NoteServiceImpl implements NoteService
 			notes = label.getNotes();
 		}
 
-		if(labels.contains(noteId) && notes.contains(labelId))
+		if(labels.contains(label) && notes.contains(labelId))
 		{
-			labels.remove(noteId);
+			labels.remove(label);
 			notes.remove(labelId);
 			LOGGER.info("Label has been removed from Note");
 		}
 		else
 		{
-			labels.add(label.getLabelId());
+			labels.add(label);
 			notes.add(note.getNoteId());
 			LOGGER.info("Label has been added to Note");
 		}

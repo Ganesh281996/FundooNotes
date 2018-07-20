@@ -1,4 +1,4 @@
-package com.fundoonotes.note.model;
+package com.fundoonotes.note.dto;
 
 import java.util.Date;
 import java.util.List;
@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fundoonotes.note.model.Label;
+
 @Document(collection="Notes")
-public class Note 
+public class ResponseNoteDTO
 {
 	@Id
 	private String noteId;
@@ -35,13 +37,14 @@ public class Note
 	private List<Label> labels;
 	
 	private List<String> collaborators;
-
+	
 	@Override
-	public String toString() {
-		return "Note [noteId=" + noteId + ", title=" + title + ", body=" + body + ", colour=" + colour + ", remainder="
-				+ remainder + ", createdDate=" + createdDate + ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned="
-				+ isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId=" + ownerId
-				+ ", labels=" + labels + ", collaborators=" + collaborators + "]";
+	public String toString() 
+	{
+		return "ResponseNoteDTO [noteId=" + noteId + ", title=" + title + ", body=" + body + ", colour=" + colour
+				+ ", remainder=" + remainder + ", createdDate=" + createdDate + ", lastUpdatedDate=" + lastUpdatedDate
+				+ ", isPinned=" + isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId="
+				+ ownerId + ", labels=" + labels + ", collaborators=" + collaborators + "]";
 	}
 
 	public String getNoteId() {
