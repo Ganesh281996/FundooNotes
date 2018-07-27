@@ -6,8 +6,11 @@ import com.fundoonotes.note.model.Label;
 
 public interface LabelService 
 {
-	Label create(Label label,String ownerId);
+	Label create(String labelName,String ownerId);	
+
 	Label update(Label label,String ownerId);
+
 	void delete(String labelId,String ownerId);
+
 	List<Label> read(String ownerId);
 }

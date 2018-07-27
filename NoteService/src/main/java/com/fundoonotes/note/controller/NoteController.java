@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fundoonotes.api.NoteAPI;
-import com.fundoonotes.note.dto.NoteDTO;
+import com.fundoonotes.note.dto.CreateNoteDTO;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
 import com.fundoonotes.note.service.NoteService;
@@ -49,7 +49,7 @@ public class NoteController
 	}
 	
 	@PostMapping(value=NoteAPI.CREATE)
-	public ResponseEntity<Note> createNote(@RequestBody NoteDTO noteDTO
+	public ResponseEntity<Note> createNote(@RequestBody CreateNoteDTO noteDTO
 			,HttpServletRequest request)
 	{
 		Note note = noteService.createNote(noteDTO,(String)request.getAttribute("ownerId"));
@@ -65,11 +65,11 @@ public class NoteController
 	}
 	
 	@DeleteMapping(value=NoteAPI.DELETE)
-	public ResponseEntity<String> deleteNote(@PathVariable(name="noteId") String noteId
+	public ResponseEntity<Response> deleteNote(@PathVariable(name="noteId") String noteId
 			,HttpServletRequest request)
 	{
 		noteService.deleteNote(noteId,(String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>("Note has been Deleted",HttpStatus.OK);
+		return new ResponseEntity<>(new Response("Note has been Deleted"),HttpStatus.OK);
 	}
 	
 	@GetMapping(value=NoteAPI.READ)
@@ -95,34 +95,34 @@ public class NoteController
 	}
 	
 	@PutMapping(value=NoteAPI.PIN)
-	public ResponseEntity<String> pin(@PathVariable("noteId") String noteId
+	public ResponseEntity<Response> pin(@PathVariable("noteId") String noteId
 			,HttpServletRequest request)
 	{
 		noteService.pin(noteId,(String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>("Either Note has been Pinned or Unpinned",HttpStatus.OK);
+		return new ResponseEntity<>(new Response("Either Note has been Pinned or Unpinned"),HttpStatus.OK);
 	}
 	
 	@PutMapping(value=NoteAPI.ARCHIEVE)
-	public ResponseEntity<String> archieve(@PathVariable("noteId") String noteId
+	public ResponseEntity<Response> archieve(@PathVariable("noteId") String noteId
 			,HttpServletRequest request)
 	{
 		noteService.archieve(noteId,(String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>("Either Note has been Archived or removed from Archive",HttpStatus.OK);
+		return new ResponseEntity<>(new Response("Either Note has been Archived or removed from Archive"),HttpStatus.OK);
 	}
 	
 	@PutMapping(value=NoteAPI.TRASH)
-	public ResponseEntity<String> trash(@PathVariable("noteId") String noteId
+	public ResponseEntity<Response> trash(@PathVariable("noteId") String noteId
 			,HttpServletRequest request)
 	{
 		noteService.trash(noteId,(String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>("Note has been Trashed or Restored",HttpStatus.OK);
+		return new ResponseEntity<>(new Response("Note has been Trashed or Restored"),HttpStatus.OK);
 	}
 	
 	@PutMapping(value=NoteAPI.LABEL)
-	public ResponseEntity<String> addLabel(@PathVariable("noteId") String noteId,
+	public ResponseEntity<Response> addLabel(@PathVariable("noteId") String noteId,
 			@PathVariable("labelId") String labelId,HttpServletRequest request)
 	{
 		noteService.label(noteId, labelId, (String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>("Label has been Added or Removed",HttpStatus.OK);
+		return new ResponseEntity<>(new Response("Label has been Added or Removed"),HttpStatus.OK);
 	}
 }

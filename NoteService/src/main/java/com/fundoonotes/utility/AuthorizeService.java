@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.exception.NonAuthoritiveResourceException;
 
@@ -22,13 +23,25 @@ public class AuthorizeService
 	@Autowired
 	NoteDao noteDao;
 	
-	public boolean authorizeUserWithNote(String ownerId,String noteId)
+	@Autowired
+	LabelDao labelDao;
+	
+	public void authorizeUserWithNote(String ownerId,String noteId)
 	{
-		System.out.println(ownerId+ "  "+noteId);
 		if(noteDao.findByNoteId(noteId).getOwnerId().equals(ownerId))
 		{
 			LOGGER.info("User has been authorized to access Note");
-			return true;
+			return;
+		}
+		throw new NonAuthoritiveResourceException(environment.getProperty("NonAuthoritiveResourceException"));
+	}
+	
+	public void authorizeUserWithLabel(String ownerId,String labelId)
+	{
+		if(labelDao.findByLabelId(labelId).getUserId().equals(ownerId))
+		{
+			LOGGER.info("User has been authorized to access Label");
+			return;
 		}
 		throw new NonAuthoritiveResourceException(environment.getProperty("NonAuthoritiveResourceException"));
 	}

@@ -17,7 +17,7 @@ import com.fundoonotes.note.dao.ElasticSearchDao;
 import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
-import com.fundoonotes.note.dto.NoteDTO;
+import com.fundoonotes.note.dto.CreateNoteDTO;
 import com.fundoonotes.note.exception.LabelNotFoundException;
 import com.fundoonotes.note.exception.NoteNotFoundException;
 import com.fundoonotes.note.model.Label;
@@ -65,12 +65,13 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public Note createNote(NoteDTO createNoteDTO, String ownerId) 
+	public Note createNote(CreateNoteDTO createNoteDTO, String ownerId) 
 	{
 		Note note = mapDTOService.NoteDtoToNote(createNoteDTO);
 		
 		note.setOwnerId(ownerId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
+		note.setLastUpdatedDate(DATE_FORMAT.format(new Date()));
 		note = noteDao.save(note);
 		elasticSearchDao.insertNote(note);
 		LOGGER.info("Note has been saved");
@@ -206,8 +207,6 @@ public class NoteServiceImpl implements NoteService
 	@Override
 	public void label(String noteId, String labelId,String ownerId) 
 	{
-		authorizeService.authorizeUserWithNote(ownerId, noteId);
-		
 		if(!noteDao.existsById(noteId))
 		{
 			throw new NoteNotFoundException("Note with NoteID = "+noteId+" was not Found");
@@ -216,6 +215,7 @@ public class NoteServiceImpl implements NoteService
 		{
 			throw new LabelNotFoundException("Label with LabelID = "+labelId+" was not Found");
 		}
+		authorizeService.authorizeUserWithNote(ownerId, noteId);
 
 		Note note = noteDao.findByNoteId(noteId);
 		Label label = labelDao.findByLabelId(labelId);

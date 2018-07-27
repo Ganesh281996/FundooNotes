@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
-import com.fundoonotes.note.dto.NoteDTO;
+import com.fundoonotes.note.dto.CreateNoteDTO;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 
@@ -25,7 +25,7 @@ public class MapDTOService
 	@Autowired
 	LabelDao labelDao;
 	
-	public Note NoteDtoToNote(NoteDTO noteDTO)
+	public Note NoteDtoToNote(CreateNoteDTO noteDTO)
 	{
 		Note note = modelMapper.map(noteDTO, Note.class);
 		if(noteDTO.getLabels() == null)

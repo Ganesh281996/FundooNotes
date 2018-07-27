@@ -3,8 +3,8 @@ package com.fundoonotes.note.dto;
 import java.util.Date;
 import java.util.List;
 
-public class NoteDTO 
-{
+public class CreateNoteDTO 
+{	
 	private String title;
 	
 	private String body;
@@ -17,16 +17,18 @@ public class NoteDTO
 	
 	private boolean isArchieved = false;
 	
-	private List<String> collaborators;
-
+	private boolean inTrash = false;
+	
 	private List<String> labels;
+	
+	private List<String> collaboratorEmailIds;
 
 	@Override
 	public String toString() 
 	{
 		return "CreateNoteDTO [title=" + title + ", body=" + body + ", colour=" + colour + ", remainder=" + remainder
-				+ ", isPinned=" + isPinned + ", isArchieved=" + isArchieved + ", collaborators=" + collaborators
-				+ ", labels=" + labels + "]";
+				+ ", isPinned=" + isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", labels="
+				+ labels + ", collaboratorEmailIds=" + collaboratorEmailIds + "]";
 	}
 
 	public String getTitle() {
@@ -77,12 +79,12 @@ public class NoteDTO
 		this.isArchieved = isArchieved;
 	}
 
-	public List<String> getCollaborators() {
-		return collaborators;
+	public boolean isInTrash() {
+		return inTrash;
 	}
 
-	public void setCollaborators(List<String> collaborators) {
-		this.collaborators = collaborators;
+	public void setInTrash(boolean inTrash) {
+		this.inTrash = inTrash;
 	}
 
 	public List<String> getLabels() {
@@ -91,5 +93,13 @@ public class NoteDTO
 
 	public void setLabels(List<String> labels) {
 		this.labels = labels;
+	}
+
+	public List<String> getCollaboratorEmailIds() {
+		return collaboratorEmailIds;
+	}
+
+	public void setCollaboratorEmailIds(List<String> collaboratorEmailIds) {
+		this.collaboratorEmailIds = collaboratorEmailIds;
 	}
 }
