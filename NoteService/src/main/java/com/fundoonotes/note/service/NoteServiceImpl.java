@@ -1,5 +1,6 @@
 package com.fundoonotes.note.service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -18,11 +22,13 @@ import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dao.Userdao;
 import com.fundoonotes.note.dto.CreateNoteDTO;
+import com.fundoonotes.note.dto.ResponseNoteDTO;
 import com.fundoonotes.note.exception.LabelNotFoundException;
 import com.fundoonotes.note.exception.NoteNotFoundException;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
+import com.fundoonotes.note.model.WebScrap;
 import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.MapDTOService;
 import com.fundoonotes.utility.Response;
@@ -57,6 +63,9 @@ public class NoteServiceImpl implements NoteService
 	@Autowired
 	MapDTOService mapDTOService;
 	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@Override
 	public Response createDummyUser(User user) 
 	{
@@ -65,9 +74,9 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public Note createNote(CreateNoteDTO createNoteDTO, String ownerId) 
+	public ResponseNoteDTO createNote(CreateNoteDTO createNoteDTO, String ownerId) 
 	{
-		Note note = mapDTOService.NoteDtoToNote(createNoteDTO);
+		Note note = mapDTOService.noteDtoToNote(createNoteDTO);
 		
 		note.setOwnerId(ownerId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
@@ -75,12 +84,12 @@ public class NoteServiceImpl implements NoteService
 		note = noteDao.save(note);
 		elasticSearchDao.insertNote(note);
 		LOGGER.info("Note has been saved");
-
-		return note;
+		
+		return modelMapper.map(note, ResponseNoteDTO.class);
 	}
 
 	@Override
-	public Note updateNote(Note note, String ownerId) 
+	public ResponseNoteDTO updateNote(Note note, String ownerId) 
 	{
 		if(!noteDao.existsById(note.getNoteId()))
 		{
@@ -90,9 +99,10 @@ public class NoteServiceImpl implements NoteService
 		
 		note.setLastUpdatedDate(DATE_FORMAT.format(new Date()));
 		note = noteDao.save(note);
+		elasticSearchDao.updateNote(note);
 		LOGGER.info("Note has been updated");
 
-		return note;
+		return modelMapper.map(note, ResponseNoteDTO.class);
 	}
 
 	@Override
@@ -113,7 +123,8 @@ public class NoteServiceImpl implements NoteService
 	public List<Note> displayNotes(String ownerId) 
 	{
 		LOGGER.info("Displaying Notes");
-		return noteDao.findByOwnerId(ownerId);	
+		List<Note> notes = noteDao.findByOwnerId(ownerId);
+		List<ResponseNoteDTO> responseNoteDTOs = modelMapper.map(notes, List.class);
 	}
 	
 
@@ -143,6 +154,7 @@ public class NoteServiceImpl implements NoteService
 		{
 			note.setPinned(false);
 			note = noteDao.save(note);
+			elasticSearchDao.updateNote(note);
 			LOGGER.info("Note has been UnPinned");
 		}
 		else
@@ -150,6 +162,7 @@ public class NoteServiceImpl implements NoteService
 			note.setPinned(true);
 			note.setArchieved(false);
 			note = noteDao.save(note);
+			elasticSearchDao.updateNote(note);
 			LOGGER.info("Note has been Pinned");
 		}
 	}
@@ -168,6 +181,7 @@ public class NoteServiceImpl implements NoteService
 		{
 			note.setArchieved(false);
 			note = noteDao.save(note);
+			elasticSearchDao.updateNote(note);
 			LOGGER.info("Note has been removed from Archieve");
 		}
 		else
@@ -175,6 +189,7 @@ public class NoteServiceImpl implements NoteService
 			note.setArchieved(true);
 			note.setPinned(false);
 			note = noteDao.save(note);
+			elasticSearchDao.updateNote(note);
 			LOGGER.info("Note has been added to Archieve");
 		}
 	}
@@ -193,6 +208,7 @@ public class NoteServiceImpl implements NoteService
 		{
 			note.setInTrash(false);
 			note = noteDao.save(note);
+			elasticSearchDao.updateNote(note);
 			LOGGER.info("Note has been restored from trash");
 		}
 		else
@@ -200,6 +216,7 @@ public class NoteServiceImpl implements NoteService
 			note.setInTrash(true);
 			note.setPinned(false);
 			note = noteDao.save(note);
+			elasticSearchDao.updateNote(note);
 			LOGGER.info("Note has been added to trash");
 		}
 	}
@@ -251,6 +268,27 @@ public class NoteServiceImpl implements NoteService
 		label.setNotes(notes);
 
 		noteDao.save(note);
+		elasticSearchDao.updateNote(note);
 		labelDao.save(label);
+	}
+
+	@Override
+	public WebScrap getWebDetails(String url)
+	{
+		Document document = null;
+		try 
+		{
+			document = Jsoup.connect("https://mumbaimirror.indiatimes.com/mumbai/mumbai-speaks/articlelist/55817845.cms").get();
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		WebScrap scrap = new WebScrap();
+		scrap.setTitle(document.title());
+		String[] urlSplit = document.baseUri().split(".com");
+		scrap.setUrl(urlSplit[0]+".com");
+		scrap.setImage(urlSplit[0]+".com"+document.getElementsByTag("img").attr("src"));
+		return scrap;
 	}
 }

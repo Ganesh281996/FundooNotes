@@ -21,9 +21,7 @@ public class ResponseNoteDTO
 	private String colour = "white";
 	
 	private Date remainder;
-	
-	private String createdDate;
-	
+		
 	private String lastUpdatedDate;
 	
 	private boolean isPinned = false;
@@ -36,15 +34,15 @@ public class ResponseNoteDTO
 	
 	private List<Label> labels;
 	
-	private List<String> collaborators;
-	
+	private List<CollaboratorResponseDTO> collaborators;
+
 	@Override
 	public String toString() 
 	{
 		return "ResponseNoteDTO [noteId=" + noteId + ", title=" + title + ", body=" + body + ", colour=" + colour
-				+ ", remainder=" + remainder + ", createdDate=" + createdDate + ", lastUpdatedDate=" + lastUpdatedDate
-				+ ", isPinned=" + isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId="
-				+ ownerId + ", labels=" + labels + ", collaborators=" + collaborators + "]";
+				+ ", remainder=" + remainder + ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned=" + isPinned
+				+ ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId=" + ownerId + ", labels="
+				+ labels + ", collaborators=" + collaborators + "]";
 	}
 
 	public String getNoteId() {
@@ -85,14 +83,6 @@ public class ResponseNoteDTO
 
 	public void setRemainder(Date remainder) {
 		this.remainder = remainder;
-	}
-
-	public String getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
 	}
 
 	public String getLastUpdatedDate() {
@@ -143,11 +133,11 @@ public class ResponseNoteDTO
 		this.labels = labels;
 	}
 
-	public List<String> getCollaborators() {
+	public List<CollaboratorResponseDTO> getCollaborators() {
 		return collaborators;
 	}
 
-	public void setCollaborators(List<String> collaborators) {
+	public void setCollaborators(List<CollaboratorResponseDTO> collaborators) {
 		this.collaborators = collaborators;
 	}
 }

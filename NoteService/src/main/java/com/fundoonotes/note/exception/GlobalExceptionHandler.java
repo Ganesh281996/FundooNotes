@@ -31,21 +31,21 @@ public class GlobalExceptionHandler
 	@ExceptionHandler(value = NoteNotFoundException.class)
 	public ResponseEntity<Response> noteNotFoundException(NoteNotFoundException exception)
 	{
-		LOGGER.error(environment.getProperty("NoteNotFoundException"), exception);
-		return new ResponseEntity<>(new Response(environment.getProperty("NoteNotFoundException")),HttpStatus.BAD_REQUEST);
+		LOGGER.error(exception.getMessage(), exception);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(value = LabelNotFoundException.class)
 	public ResponseEntity<Response> labelNotFoundException(LabelNotFoundException exception)
 	{
-		LOGGER.error(environment.getProperty("LabelNotFoundException"), exception);
-		return new ResponseEntity<>(new Response(environment.getProperty("LabelNotFoundException")),HttpStatus.BAD_REQUEST);
+		LOGGER.error(exception.getMessage(), exception);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(value = NonAuthoritiveResourceException.class)
 	public ResponseEntity<Response> nonAuthoritiveResourceException(NonAuthoritiveResourceException exception)
 	{
-		LOGGER.error(environment.getProperty("NonAuthoritiveResourceException"), exception);
-		return new ResponseEntity<>(new Response(environment.getProperty("NonAuthoritiveResourceException")),HttpStatus.BAD_REQUEST);
+		LOGGER.error(exception.getMessage(), exception);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.NON_AUTHORITATIVE_INFORMATION);
 	}
 }

@@ -25,7 +25,7 @@ public class MapDTOService
 	@Autowired
 	LabelDao labelDao;
 	
-	public Note NoteDtoToNote(CreateNoteDTO noteDTO)
+	public Note noteDtoToNote(CreateNoteDTO noteDTO)
 	{
 		Note note = modelMapper.map(noteDTO, Note.class);
 		if(noteDTO.getLabels() == null)

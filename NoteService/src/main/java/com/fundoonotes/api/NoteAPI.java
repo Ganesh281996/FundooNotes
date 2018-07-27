@@ -17,6 +17,8 @@ public class NoteAPI
 	public static final String TRASH = "/trash/{noteId}";
 	
 	public static final String LABEL = "/addlabel/{noteId}/{labelId}";
+	
+	public static final String SCRAP = "/getscrap/{url}";
 
 	public static final String ADD_COLLABORATOR = "/collaborator/{noteId}/{email}";
 }

@@ -1,14 +1,13 @@
 package com.fundoonotes.user.service;
 
-import com.fundoonotes.user.model.User;
-import com.fundoonotes.utility.Response;
+import com.fundoonotes.user.dto.RegisterUserDTO;
 
 public interface UserService 
 {
-	public Response register(User user);
-	public Response activateUser(String token);
-	public Response login(String email,String password);
-	public Response forgotPassword(String email);
-	public Response verifyToken(String token);
-	public Response resetPassword(String token,String password1,String password2);
+	public void register(RegisterUserDTO registerUserDTO);
+	public void activateUser(String token);
+	public String login(String email,String password);
+	public void forgotPassword(String email);
+	public void verifyToken(String token);
+	public void resetPassword(String token,String password1,String password2);
 }

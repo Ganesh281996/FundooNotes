@@ -19,6 +19,15 @@ public class EmailService
 	
 	private static final Logger LOGGER=Logger.getLogger(EmailService.class.getName());
 	
+	public Mail createVerificationEmail(String to,String token)
+	{
+		Mail mail = new Mail();
+		mail.setTo(to);
+		mail.setSubject("Verification Email");
+		mail.setText("<a href ='http://localhost:8080/user/activateuser/"+token+"'>Verify Email</a>");
+		return mail;
+	}
+	
 	@RabbitListener(queues = "mailqueue")
 	public void sendEmail(Mail mail) throws MessagingException
 	{

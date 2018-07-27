@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fundoonotes.api.NoteAPI;
 import com.fundoonotes.note.dto.CreateNoteDTO;
+import com.fundoonotes.note.dto.ResponseNoteDTO;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
+import com.fundoonotes.note.model.WebScrap;
 import com.fundoonotes.note.service.NoteService;
 import com.fundoonotes.utility.JwtTokenService;
 import com.fundoonotes.utility.Response;
@@ -49,7 +51,7 @@ public class NoteController
 	}
 	
 	@PostMapping(value=NoteAPI.CREATE)
-	public ResponseEntity<Note> createNote(@RequestBody CreateNoteDTO noteDTO
+	public ResponseEntity<ResponseNoteDTO> createNote(@RequestBody CreateNoteDTO noteDTO
 			,HttpServletRequest request)
 	{
 		Note note = noteService.createNote(noteDTO,(String)request.getAttribute("ownerId"));
@@ -124,5 +126,13 @@ public class NoteController
 	{
 		noteService.label(noteId, labelId, (String)request.getAttribute("ownerId"));
 		return new ResponseEntity<>(new Response("Label has been Added or Removed"),HttpStatus.OK);
+	}
+	
+	@GetMapping(value=NoteAPI.SCRAP)
+	public ResponseEntity<WebScrap> getWebScrap(@PathVariable("url") String url
+			,HttpServletRequest request)
+	{
+		WebScrap scrap = noteService.getWebDetails(url);
+		return new ResponseEntity<>(scrap, HttpStatus.OK);
 	}
 }
