@@ -13,9 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fundoonotes.exception.PasswordMismatchException;
 import com.fundoonotes.exception.UserNotFoundException;
+import com.fundoonotes.user.dto.EmailDTO;
+import com.fundoonotes.user.dto.LoginDTO;
 import com.fundoonotes.user.dto.RegisterUserDTO;
-import com.fundoonotes.user.model.Mail;
 import com.fundoonotes.user.model.User;
 import com.fundoonotes.user.repository.UserDao;
 import com.fundoonotes.utility.EmailService;
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService
 	@Autowired
 	AmqpTemplate amqpTemplate;
 	
-	private static final Logger LOGGER=LoggerFactory.getLogger(UserServiceImpl.class);
+	private static final Logger LOGGER=LoggerFactory.getLogger(UserServiceImpl.class);	
 	
 	@Override
 	public void register(RegisterUserDTO registerUserDTO)
@@ -60,84 +62,52 @@ public class UserServiceImpl implements UserService
 		
 		user=userDao.save(user);
 		LOGGER.info("User Registered Successfully . Verification status = false");
-		
-		String token=jwtTokenService.getJwtToken(user.get_id());
-		try
-		{
-			Mail mail = emailService.createVerificationEmail(user.getEmail(), token);
-			amqpTemplate.convertAndSend("mailexchange", "mailkey", mail);
-		}
-		catch(Exception exception)
-		{
-			exception.printStackTrace();
-			LOGGER.warn("Unable to send Email");
-		}
+
+		String token=jwtTokenService.getJwtToken(user.getUserId());
+
+		emailService.sendVerificationEmail(user.getEmail(), token);
 	}
 
 	@Override
 	public void activateUser(String token) 
 	{
-		String _id=null;
-		try
-		{
-			_id=jwtTokenService.verifyToken(token);
-			LOGGER.info("Token has been verified");
-		}
-		catch(Exception exception)
-		{
-			LOGGER.warn("Invalid Token unable to verify");
-		}
-		User user=userDao.findBy_id(_id);
-		if(user!=null)
-		{
-			user.setVerified(true);
-			userDao.save(user);
-			LOGGER.info("User Email has been Verified");
-		}
-		LOGGER.warn("User with Id present in token was not found");
-	}
-
-	@Override
-	public String login(String email, String password) 
-	{
-		User user = userDao.findByEmail(email);
+		String userId=jwtTokenService.verifyToken(token);
+		
+		User user=userDao.findByUserId(userId);
 		if(user == null)
 		{
-			throw new UserNotFoundException("");
+			throw new UserNotFoundException(environment.getProperty("UserNotFoundException"));
 		}
-		if(!bCryptPasswordEncoder.matches(password, user.getPassword()))
-		{
-			throw new 
-		}
-		LOGGER.info("User with given Email and Password was found");
-		LOGGER.info("User has logged in successfully!");
-		return jwtTokenService.getJwtToken(user.get_id());
-		LOGGER.warn("User with given Email and Password was not found");
+		user.setVerified(true);
+		userDao.save(user);
+		LOGGER.info("User Email has been Verified");
 	}
 
 	@Override
-	public void forgotPassword(String email) 
+	public String login(LoginDTO loginDTO) 
 	{
-		User user = userDao.findByEmail(email);
-		if(user==null)
+		User user = userDao.findByEmail(loginDTO.getEmail());
+		if(user == null)
 		{
-			LOGGER.warn("User with given Email was not found");
+			throw new UserNotFoundException(environment.getProperty("UserNotFoundException"));
 		}
-		
-		String token = jwtTokenService.getJwtToken(user.get_id());
-		try
+		if(!bCryptPasswordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
 		{
-			Mail mail = new Mail();
-			mail.setTo(email);
-			mail.setSubject("Verification Email");
-			mail.setText("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>");
-			amqpTemplate.convertAndSend("MailExchange", "MailKey", mail);
-//			emailService.sendEmail("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>", email);
+			throw new PasswordMismatchException(environment.getProperty("PasswordMismatchException"));
 		}
-		catch(Exception exception)
+		return jwtTokenService.getJwtToken(user.getUserId());
+	}
+
+	@Override
+	public void forgotPassword(EmailDTO emailDTO) 
+	{
+		User user = userDao.findByEmail(emailDTO.getEmail());
+		if(user == null)
 		{
-			LOGGER.warn("Unable to send Email");
+			throw new UserNotFoundException(environment.getProperty("UserNotFoundException"));
 		}
+		String token = jwtTokenService.getJwtToken(user.getUserId());
+		emailService.sendResetPasswordEmail(emailDTO.getEmail(), token);
 	}
 
 	@Override
@@ -145,39 +115,24 @@ public class UserServiceImpl implements UserService
 	{
 		if(!password1.equals(password2))
 		{
-			LOGGER.warn("Passwords didnt match");
+			throw new PasswordMismatchException(environment.getProperty("PasswordMismatchException"));
 		}
-		String _id = null;
-		try
+		String userId=jwtTokenService.verifyToken(token);
+
+		User user = userDao.findByUserId(userId);
+		if(user == null)
 		{
-			_id=jwtTokenService.verifyToken(token);
-			LOGGER.info("Token has been verified");
+			throw new UserNotFoundException(environment.getProperty("UserNotFoundException"));
 		}
-		catch(Exception exception)
-		{
-			LOGGER.warn("Invalid Token unable to verify");
-		}
-		User user = userDao.findBy_id(_id);
-		if(user!=null)
-		{
-			user.setPassword(bCryptPasswordEncoder.encode(password1));
-			userDao.save(user);
-			LOGGER.info("Password has been changed");
-		}
-		LOGGER.warn("User with Id present in token was not found");
+
+		user.setPassword(bCryptPasswordEncoder.encode(password1));
+		userDao.save(user);
+		LOGGER.info("Password has been changed");
 	}
 
 	@Override
 	public void verifyToken(String token) 
 	{
-		try
-		{
-			jwtTokenService.verifyToken(token);
-			LOGGER.info("Token has been verified");
-		}
-		catch(Exception exception)
-		{
-			LOGGER.warn("Invalid Token unable to verify");
-		}
+		jwtTokenService.verifyToken(token);
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
 import com.fundoonotes.note.dto.CreateNoteDTO;
+import com.fundoonotes.note.dto.ResponseNoteDTO;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
 
@@ -40,5 +41,16 @@ public class MapDTOService
 		}
 		note.setLabels(labels);
 		return note;
+	}
+	
+	public List<ResponseNoteDTO> noteDtoToResponseNoteDto(List<Note> notes)
+	{
+		List<ResponseNoteDTO> responseNoteDTOs = new ArrayList<>();
+		
+		for(int i=0 ; i<notes.size() ; i++)
+		{
+			responseNoteDTOs.add(modelMapper.map(notes.get(i), ResponseNoteDTO.class));
+		}
+		return responseNoteDTOs;
 	}
 }

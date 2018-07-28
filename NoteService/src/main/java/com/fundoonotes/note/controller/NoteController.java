@@ -54,16 +54,16 @@ public class NoteController
 	public ResponseEntity<ResponseNoteDTO> createNote(@RequestBody CreateNoteDTO noteDTO
 			,HttpServletRequest request)
 	{
-		Note note = noteService.createNote(noteDTO,(String)request.getAttribute("ownerId"));
+		ResponseNoteDTO note = noteService.createNote(noteDTO,(String)request.getAttribute("ownerId"));
 		return new ResponseEntity<>(note,HttpStatus.OK);
 	}
 	
 	@PutMapping(value=NoteAPI.UPDATE)
-	public ResponseEntity<Note> updateNote(@RequestBody Note note
+	public ResponseEntity<ResponseNoteDTO> updateNote(@RequestBody Note note
 			,HttpServletRequest request)
 	{
-		note = noteService.updateNote(note,(String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>(note,HttpStatus.OK);
+		ResponseNoteDTO responseNoteDTO = noteService.updateNote(note,(String)request.getAttribute("ownerId"));
+		return new ResponseEntity<>(responseNoteDTO,HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value=NoteAPI.DELETE)
@@ -75,10 +75,10 @@ public class NoteController
 	}
 	
 	@GetMapping(value=NoteAPI.READ)
-	public ResponseEntity<List<Note>> displayNotes(HttpServletRequest request)
+	public ResponseEntity<List<ResponseNoteDTO>> displayNotes(HttpServletRequest request)
 	{
-		List<Note> notes = noteService.displayNotes((String)request.getAttribute("ownerId"));
-		return new ResponseEntity<>(notes,HttpStatus.OK);
+		List<ResponseNoteDTO> responseNoteDTOs = noteService.displayNotes((String)request.getAttribute("ownerId"));
+		return new ResponseEntity<>(responseNoteDTOs,HttpStatus.OK);
 	}
 	
 	@GetMapping(value=NoteAPI.READ_ELASTIC_BY_ID)

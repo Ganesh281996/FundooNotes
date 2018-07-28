@@ -21,7 +21,7 @@ public class RedisRepositoryImpl implements RedisRepository
 	{
 		try
 		{
-			redisTemplate.opsForHash().put(KEY, user.get_id(), user);
+			redisTemplate.opsForHash().put(KEY, user.getUserId(), user);
 		}
 		catch(Exception exception)
 		{

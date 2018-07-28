@@ -3,9 +3,12 @@ package com.fundoonotes.utility;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import org.springframework.stereotype.Service;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+@Service
 public class JwtTokenService 
 {
 	private static final Logger LOGGER=Logger.getLogger(JwtTokenService.class.getName());

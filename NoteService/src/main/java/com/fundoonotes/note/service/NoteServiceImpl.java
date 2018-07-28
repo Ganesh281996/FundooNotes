@@ -120,11 +120,11 @@ public class NoteServiceImpl implements NoteService
 	}
 
 	@Override
-	public List<Note> displayNotes(String ownerId) 
+	public List<ResponseNoteDTO> displayNotes(String ownerId) 
 	{
 		LOGGER.info("Displaying Notes");
 		List<Note> notes = noteDao.findByOwnerId(ownerId);
-		List<ResponseNoteDTO> responseNoteDTOs = modelMapper.map(notes, List.class);
+		return mapDTOService.noteDtoToResponseNoteDto(notes);
 	}
 	
 

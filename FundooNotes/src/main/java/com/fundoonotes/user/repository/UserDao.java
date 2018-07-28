@@ -8,7 +8,7 @@ import com.fundoonotes.user.model.User;
 @Repository
 public interface UserDao extends MongoRepository<User, String>
 {
-	public User findBy_id(String _id);
+	public User findByUserId(String userId);
 	
 	public User findByEmail(String email);
 }

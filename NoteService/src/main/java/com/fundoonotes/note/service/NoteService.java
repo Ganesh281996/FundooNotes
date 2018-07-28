@@ -17,7 +17,7 @@ public interface NoteService
 	ResponseNoteDTO createNote(CreateNoteDTO createNoteDTO,String ownerId);
 	ResponseNoteDTO updateNote(Note note,String ownerId);
 	void deleteNote(String noteId,String ownerId);
-	List<Note> displayNotes(String ownerId);
+	List<ResponseNoteDTO> displayNotes(String ownerId);
 	
 	List<Map<String, Note>> displayNotesByElasticSearch(String ownerId);
 	List<Map<String, Note>> displayNotesBySearch(String search);

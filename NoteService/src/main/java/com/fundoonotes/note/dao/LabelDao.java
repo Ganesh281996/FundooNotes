@@ -13,4 +13,8 @@ public interface LabelDao extends MongoRepository<Label, String>
 	List<Label> findByUserId(String userId);
 
 	Label findByLabelId(String labelId);
+	
+	Label findByLabelName(String labelName);
+	
+	boolean existsByLabelName(String labelName);
 }

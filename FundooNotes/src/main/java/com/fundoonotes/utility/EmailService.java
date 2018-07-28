@@ -1,33 +1,55 @@
 package com.fundoonotes.utility;
 
-import java.util.logging.Logger;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import com.fundoonotes.user.model.Mail;
 
+@PropertySource(value = "classpath:rabbitmq.properties")
 public class EmailService 
 {
 	@Autowired
+	Environment environment;
+	
+	@Autowired
 	JavaMailSender javaMailSender;
 	
-	private static final Logger LOGGER=Logger.getLogger(EmailService.class.getName());
+	@Autowired
+	AmqpTemplate amqpTemplate;
 	
-	public Mail createVerificationEmail(String to,String token)
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+	
+	public void sendVerificationEmail(String to,String token)
 	{
 		Mail mail = new Mail();
 		mail.setTo(to);
 		mail.setSubject("Verification Email");
 		mail.setText("<a href ='http://localhost:8080/user/activateuser/"+token+"'>Verify Email</a>");
-		return mail;
+		
+		amqpTemplate.convertAndSend(environment.getProperty("mail.exchange"), environment.getProperty("mail.routingkey"), mail);
+		
 	}
 	
+	public void sendResetPasswordEmail(String to,String token)
+	{
+		Mail mail = new Mail();
+		mail.setTo(to);
+		mail.setSubject("Reset Password");
+		mail.setText("<a href ='http://localhost:8080/user/forgotpassword/resetpassword/"+token+"'>Reset Password</a>");
+		
+		amqpTemplate.convertAndSend(environment.getProperty("mail.exchange"), environment.getProperty("mail.routingkey"), mail);
+	}
+		
 	@RabbitListener(queues = "mailqueue")
 	public void sendEmail(Mail mail) throws MessagingException
 	{

@@ -2,17 +2,9 @@ package com.fundoonotes.user.model;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "Users")
 public class User implements Serializable
@@ -20,45 +12,33 @@ public class User implements Serializable
 	private static final long serialVersionUID = 7267769044647652333L;
 
 	@Id
-	private String _id;
+	private String userId;
 
-	@Field
-	@NotEmpty(message = "Name must not be Empty")
-	@Size(min = 4, max = 20, message = "Name must contain 4-20 characters")
 	private String name;
 
-	@Field
-	@Email(message = "Enter valid Email")
-	@NotEmpty(message="Email must not be Empty")
 	@Indexed(unique=true)
 	private String email;
 
-	@Field
-	@NotBlank(message = "Password must not be blank")
-	@Size(min=4,max=100,message="Enter Strong Password")
 	private String password;
 
-	@Field
-	@Min(999999999) @Max(10000000000L)
 	@Indexed(unique=true)
 	private long phoneNumber;
 
-	@Field
-	private boolean isVerified;
-	
+	private boolean isVerified = false;
+
 	@Override
 	public String toString() 
 	{
-		return "User [_id=" + _id + ", name=" + name + ", email=" + email + ", password=" + password + ", phoneNumber="
-				+ phoneNumber + ", isVerified=" + isVerified + "]";
+		return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password
+				+ ", phoneNumber=" + phoneNumber + ", isVerified=" + isVerified + "]";
 	}
 
-	public String get_id() {
-		return _id;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void set_id(String _id) {
-		this._id = _id;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {

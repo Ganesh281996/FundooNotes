@@ -11,33 +11,33 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter 
 {
-		@Override
-		protected void configure(HttpSecurity http) throws Exception 
-		{
-			http
-			.csrf()
-			.disable()
-			.antMatcher("/demo/**")
-			.authorizeRequests()
-			.antMatchers("/demo/**")
-			.permitAll()
-			.anyRequest()
-			.authenticated();
-		}
+	@Override
+	protected void configure(HttpSecurity http) throws Exception 
+	{
+		http
+		.csrf()
+		.disable()
+		.antMatcher("demo/social")
+		.authorizeRequests()
+		.antMatchers("demo/social")
+		.permitAll()
+		.anyRequest()
+		.authenticated();
+	}
 
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception 
-//	{
-//		http
-//		.authorizeRequests()
-//		.antMatchers("/demo").permitAll()
-//		.anyRequest().authenticated()
-//		.and()
-//		.formLogin()
-//		.loginPage("/login")
-//		.permitAll()
-//		.and()
-//		.logout()
-//		.permitAll();
-//	}
+//		@Override
+//		protected void configure(HttpSecurity http) throws Exception 
+//		{
+//			http
+//			.authorizeRequests()
+//			.antMatchers("/demo").permitAll()
+//			.anyRequest().authenticated()
+//			.and()
+//			.formLogin()
+//			.loginPage("/login")
+//			.permitAll()
+//			.and()
+//			.logout()
+//			.permitAll();
+//		}
 }
