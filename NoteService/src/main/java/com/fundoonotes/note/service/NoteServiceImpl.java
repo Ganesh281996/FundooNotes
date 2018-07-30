@@ -32,6 +32,7 @@ import com.fundoonotes.note.model.WebScrap;
 import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.MapDTOService;
 import com.fundoonotes.utility.Response;
+import com.fundoonotes.utility.WebScrapService;
 
 @Transactional
 @Service
@@ -58,6 +59,9 @@ public class NoteServiceImpl implements NoteService
 	private ElasticSearchDao elasticSearchDao;
 	
 	@Autowired
+	WebScrapService webScrapService; 
+	
+	@Autowired
 	AuthorizeService authorizeService;
 	
 	@Autowired
@@ -77,7 +81,7 @@ public class NoteServiceImpl implements NoteService
 	public ResponseNoteDTO createNote(CreateNoteDTO createNoteDTO, String ownerId) 
 	{
 		Note note = mapDTOService.noteDtoToNote(createNoteDTO);
-		
+		note = webScrapService.webScrapping(note);
 		note.setOwnerId(ownerId);
 		note.setCreatedDate(DATE_FORMAT.format(new Date()));
 		note.setLastUpdatedDate(DATE_FORMAT.format(new Date()));
@@ -98,6 +102,7 @@ public class NoteServiceImpl implements NoteService
 		authorizeService.authorizeUserWithNote(ownerId, note.getNoteId());
 		
 		note.setLastUpdatedDate(DATE_FORMAT.format(new Date()));
+		note = webScrapService.webScrapping(note);
 		note = noteDao.save(note);
 		elasticSearchDao.updateNote(note);
 		LOGGER.info("Note has been updated");

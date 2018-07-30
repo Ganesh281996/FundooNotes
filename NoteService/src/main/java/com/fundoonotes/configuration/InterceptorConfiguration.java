@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import com.fundoonotes.interceptor.LoggerInterceptor;
 import com.fundoonotes.interceptor.UserAuthenticationInterceptor;
@@ -15,7 +16,10 @@ public class InterceptorConfiguration implements WebMvcConfigurer
 	UserAuthenticationInterceptor userAuthenticationInterceptor; 
 	
 	@Autowired
-	LoggerInterceptor loggerInterceptor; 
+	LoggerInterceptor loggerInterceptor;
+	
+	@Autowired
+	LocaleChangeInterceptor localeChangeInterceptor; 
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) 
@@ -24,5 +28,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer
 		.addPathPatterns("/note/*");
 		
 		registry.addInterceptor(loggerInterceptor);
+		
+		registry.addInterceptor(localeChangeInterceptor);
 	}
 }

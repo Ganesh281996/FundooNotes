@@ -18,7 +18,7 @@ public class NoteOperationsService
 	
 	@Autowired
 	private static NoteDao noteDao;
-	
+		
 	public void addLabels(Note note,List<String> labelNames)
 	{
 		Label label = null;

@@ -17,13 +17,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 		http
 		.csrf()
 		.disable()
-		.antMatcher("demo/social")
+		.antMatcher("/**")
 		.authorizeRequests()
-		.antMatchers("demo/social")
+		.antMatchers("/")
 		.permitAll()
 		.anyRequest()
 		.authenticated();
 	}
+	
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.antMatcher("/**")
+//		.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
+//		.authorizeRequests()
+//			.antMatchers("/", "/connect**", "/webjars/**")
+//			.permitAll()
+//		.anyRequest()
+//			.authenticated()
+//		.and()
+//			.logout()
+//		    .logoutSuccessUrl("/").permitAll().and().csrf()
+//		 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//	}
 
 //		@Override
 //		protected void configure(HttpSecurity http) throws Exception 

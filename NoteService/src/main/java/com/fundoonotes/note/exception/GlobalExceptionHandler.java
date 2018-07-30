@@ -25,27 +25,27 @@ public class GlobalExceptionHandler
 	public ResponseEntity<Response> exception(Exception exception)
 	{
 		LOGGER.error(environment.getProperty("GlobalException"), exception);
-		return new ResponseEntity<>(new Response(environment.getProperty("GlobalException")),HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new Response(environment.getProperty("GlobalException")),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(value = NoteNotFoundException.class)
 	public ResponseEntity<Response> noteNotFoundException(NoteNotFoundException exception)
 	{
 		LOGGER.error(exception.getMessage(), exception);
-		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(value = LabelNotFoundException.class)
 	public ResponseEntity<Response> labelNotFoundException(LabelNotFoundException exception)
 	{
 		LOGGER.error(exception.getMessage(), exception);
-		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(value = NonAuthoritiveResourceException.class)
 	public ResponseEntity<Response> nonAuthoritiveResourceException(NonAuthoritiveResourceException exception)
 	{
 		LOGGER.error(exception.getMessage(), exception);
-		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.UNAUTHORIZED);
 	}
 }

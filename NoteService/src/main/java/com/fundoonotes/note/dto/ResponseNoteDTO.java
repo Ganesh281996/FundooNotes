@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fundoonotes.note.model.Label;
+import com.fundoonotes.note.model.WebScrap;
 
 @Document(collection="Notes")
 public class ResponseNoteDTO
@@ -35,6 +36,8 @@ public class ResponseNoteDTO
 	private List<Label> labels;
 	
 	private List<CollaboratorResponseDTO> collaborators;
+	
+	private List<WebScrap> webScraps;
 
 	@Override
 	public String toString() 
@@ -42,7 +45,7 @@ public class ResponseNoteDTO
 		return "ResponseNoteDTO [noteId=" + noteId + ", title=" + title + ", body=" + body + ", colour=" + colour
 				+ ", remainder=" + remainder + ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned=" + isPinned
 				+ ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId=" + ownerId + ", labels="
-				+ labels + ", collaborators=" + collaborators + "]";
+				+ labels + ", collaborators=" + collaborators + ", webScraps=" + webScraps + "]";
 	}
 
 	public String getNoteId() {
@@ -139,5 +142,13 @@ public class ResponseNoteDTO
 
 	public void setCollaborators(List<CollaboratorResponseDTO> collaborators) {
 		this.collaborators = collaborators;
+	}
+
+	public List<WebScrap> getWebScraps() {
+		return webScraps;
+	}
+
+	public void setWebScraps(List<WebScrap> webScraps) {
+		this.webScraps = webScraps;
 	}
 }

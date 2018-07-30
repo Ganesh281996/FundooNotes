@@ -35,13 +35,16 @@ public class Note
 	private List<Label> labels;
 	
 	private List<String> collaborators;
+	
+	private List<WebScrap> webScraps;
 
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return "Note [noteId=" + noteId + ", title=" + title + ", body=" + body + ", colour=" + colour + ", remainder="
 				+ remainder + ", createdDate=" + createdDate + ", lastUpdatedDate=" + lastUpdatedDate + ", isPinned="
 				+ isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", ownerId=" + ownerId
-				+ ", labels=" + labels + ", collaborators=" + collaborators + "]";
+				+ ", labels=" + labels + ", collaborators=" + collaborators + ", webScraps=" + webScraps + "]";
 	}
 
 	public String getNoteId() {
@@ -146,5 +149,13 @@ public class Note
 
 	public void setCollaborators(List<String> collaborators) {
 		this.collaborators = collaborators;
+	}
+
+	public List<WebScrap> getWebScraps() {
+		return webScraps;
+	}
+
+	public void setWebScrapes(List<WebScrap> webScraps) {
+		this.webScraps = webScraps;
 	}
 }
