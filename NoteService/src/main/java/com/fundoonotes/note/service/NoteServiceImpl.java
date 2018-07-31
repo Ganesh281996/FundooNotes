@@ -31,6 +31,7 @@ import com.fundoonotes.note.model.User;
 import com.fundoonotes.note.model.WebScrap;
 import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.MapDTOService;
+import com.fundoonotes.utility.NoteOperationsService;
 import com.fundoonotes.utility.Response;
 import com.fundoonotes.utility.WebScrapService;
 
@@ -70,11 +71,29 @@ public class NoteServiceImpl implements NoteService
 	@Autowired
 	ModelMapper modelMapper;
 	
+	@Autowired
+	NoteOperationsService noteOperationsService; 
+	
 	@Override
 	public Response createDummyUser(User user) 
 	{
 		userDao.save(user);
 		return null;
+	}
+	
+//	@Override
+	public ResponseNoteDTO createNot(CreateNoteDTO createNoteDTO, String ownerId) 
+	{
+		Note note = modelMapper.map(createNoteDTO, Note.class);
+		noteOperationsService.setProperties(note, ownerId);
+		note = webScrapService.webScrapping(note);
+		
+		
+		note = noteDao.save(note);
+		elasticSearchDao.insertNote(note);
+		LOGGER.info("Note has been saved");
+		
+		return modelMapper.map(note, ResponseNoteDTO.class);
 	}
 
 	@Override

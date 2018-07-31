@@ -18,17 +18,12 @@ public class InterceptorConfiguration implements WebMvcConfigurer
 	@Autowired
 	LoggerInterceptor loggerInterceptor;
 	
-	@Autowired
-	LocaleChangeInterceptor localeChangeInterceptor; 
-	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) 
 	{
 		registry.addInterceptor(userAuthenticationInterceptor)
 		.addPathPatterns("/note/*");
 		
-		registry.addInterceptor(loggerInterceptor);
-		
-		registry.addInterceptor(localeChangeInterceptor);
+		registry.addInterceptor(loggerInterceptor);		
 	}
 }

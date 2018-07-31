@@ -50,16 +50,16 @@ public class EmailService
 		amqpTemplate.convertAndSend(environment.getProperty("mail.exchange"), environment.getProperty("mail.routingkey"), mail);
 	}
 		
-	@RabbitListener(queues = "mailqueue")
-	public void sendEmail(Mail mail) throws MessagingException
-	{
-		MimeMessage message=javaMailSender.createMimeMessage();
-		MimeMessageHelper helper=new MimeMessageHelper(message);
-		System.out.println(mail);
-		helper.setTo(mail.getTo());
-		helper.setText(mail.getText() , true);
-		helper.setSubject(mail.getSubject());
-		javaMailSender.send(message);
-		LOGGER.info("Verification Email has been Sent");
-	}
+//	@RabbitListener(queues = "mailqueue")
+//	public void sendEmail(Mail mail) throws MessagingException
+//	{
+//		MimeMessage message=javaMailSender.createMimeMessage();
+//		MimeMessageHelper helper=new MimeMessageHelper(message);
+//		System.out.println(mail);
+//		helper.setTo(mail.getTo());
+//		helper.setText(mail.getText() , true);
+//		helper.setSubject(mail.getSubject());
+//		javaMailSender.send(message);
+//		LOGGER.info("Verification Email has been Sent");
+//	}
 }

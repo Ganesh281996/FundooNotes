@@ -28,7 +28,13 @@ public class UserController
 	
 	@Autowired
 	RabbitTemplate rabbitTemplate;
-			
+	
+	@PostMapping(value="/demo")
+	public void demo()
+	{
+		rabbitTemplate.convertAndSend("mailexchange", "mailroutingkey", "adgfhdg");
+	}
+	
 	@PostMapping(value="/register")
 	public ResponseEntity<Response> register(@Valid @RequestBody RegisterUserDTO registerUserDTO)
 	{
