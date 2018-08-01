@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,11 +30,11 @@ public class UserController
 	@Autowired
 	RabbitTemplate rabbitTemplate;
 	
-	@PostMapping(value="/demo")
-	public void demo()
-	{
-		rabbitTemplate.convertAndSend("mailexchange", "mailroutingkey", "adgfhdg");
-	}
+//	@PostMapping(value="/demo")
+//	public void demo()
+//	{
+//		rabbitTemplate.convertAndSend("mailexchange", "mailroutingkey", "adgfhdg");
+//	}
 	
 	@PostMapping(value="/register")
 	public ResponseEntity<Response> register(@Valid @RequestBody RegisterUserDTO registerUserDTO)
@@ -52,8 +53,8 @@ public class UserController
 	@PostMapping(value="/login")
 	public ResponseEntity<Response> login(@Valid @RequestBody LoginDTO loginDTO)
 	{
-		userService.login(loginDTO);
-		return new ResponseEntity<Response>(new Response("User has successfully Loggedin"), HttpStatus.OK);
+		String token = userService.login(loginDTO);
+		return new ResponseEntity<Response>(new Response(token), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/forgotpassword")
@@ -70,7 +71,14 @@ public class UserController
 		return new ResponseEntity<Response>(new Response("Password has been changed sucessfully"), HttpStatus.OK);
 	}
 	
-//	
+	@GetMapping(value="/getuserbyid/{id}")
+	public ResponseEntity<Response> getUserById(@PathVariable("id") String id)
+	{
+//		userService.resetPassword(token, password1,password2);
+		return new ResponseEntity<Response>(new Response("Password has been changed sucessfully"), HttpStatus.OK);
+	}
+	
+	
 //	@GetMapping(value="/forgotpassword/resetpassword/{token}")
 //	public ResponseEntity<Response> verifyToken(@PathVariable String token)
 //	{

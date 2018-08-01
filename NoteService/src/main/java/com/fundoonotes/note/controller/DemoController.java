@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DemoController 
 {
-	@GetMapping
-	public void get()
-	{
-		System.out.println("adgadjfhtdjdh");
-	}
+//	@GetMapping
+//	public void get()
+//	{
+//		System.out.println("adgadjfhtdjdh");
+//	}
 	
 //	@RequestMapping("/demo")
 //	public Authentication demo() 

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService
 	@Autowired
 	AmqpTemplate amqpTemplate;
 	
-	private static final Logger LOGGER=LoggerFactory.getLogger(UserServiceImpl.class);	
+	private static final Logger LOGGER=LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	@Override
 	public void register(RegisterUserDTO registerUserDTO)

@@ -48,10 +48,10 @@ public class AuthorizeService
 		throw new NonAuthoritiveResourceException(environment.getProperty("NonAuthoritiveResourceException"));
 	}
 	
-	@RabbitListener(queues = "mailqueue")
-	public void sendEmail(Object object) 
-	{
-		System.out.println(object);
-		System.out.println("doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-	}
+//	@RabbitListener(queues = "mailqueue")
+//	public void sendEmail(Object object) 
+//	{
+//		System.out.println(object);
+//		System.out.println("doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+//	}
 }

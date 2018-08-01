@@ -10,8 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fundoonotes.interceptor.LoggerInterceptor;
-import com.fundoonotes.utility.EmailService;
-import com.fundoonotes.utility.JwtTokenService;
 
 @Configuration
 public class BeanConfiguration 
@@ -22,23 +20,11 @@ public class BeanConfiguration
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Bean
-	public JwtTokenService getJwtTokenService()
-	{
-		return new JwtTokenService();
-	}
-	
-	@Bean
-	public EmailService getEmailService()
-	{
-		return new EmailService();
-	}
-	
-	@Bean
-	 public Exchange eventExchange() 
-	{
-	   return new TopicExchange("eventExchange");
-	 }
+//	@Bean
+//	 public Exchange eventExchange() 
+//	{
+//	   return new TopicExchange("eventExchange");
+//	 }
 	
 	@Bean
 	public JedisConnectionFactory jedisConnectionFactory()
