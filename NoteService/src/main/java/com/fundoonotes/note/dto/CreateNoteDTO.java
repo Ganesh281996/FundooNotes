@@ -1,7 +1,7 @@
 package com.fundoonotes.note.dto;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 public class CreateNoteDTO 
 {	
@@ -19,16 +19,16 @@ public class CreateNoteDTO
 	
 	private boolean inTrash = false;
 	
-	private List<String> labels;
+	private Set<String> labelNames;
 	
-	private List<String> collaboratorEmailIds;
+	private Set<String> collaboratorEmailIds;
 
 	@Override
 	public String toString() 
 	{
 		return "CreateNoteDTO [title=" + title + ", body=" + body + ", colour=" + colour + ", remainder=" + remainder
-				+ ", isPinned=" + isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", labels="
-				+ labels + ", collaboratorEmailIds=" + collaboratorEmailIds + "]";
+				+ ", isPinned=" + isPinned + ", isArchieved=" + isArchieved + ", inTrash=" + inTrash + ", labelNames="
+				+ labelNames + ", collaboratorEmailIds=" + collaboratorEmailIds + "]";
 	}
 
 	public String getTitle() {
@@ -87,19 +87,19 @@ public class CreateNoteDTO
 		this.inTrash = inTrash;
 	}
 
-	public List<String> getLabels() {
-		return labels;
+	public Set<String> getLabelNames() {
+		return labelNames;
 	}
 
-	public void setLabels(List<String> labels) {
-		this.labels = labels;
+	public void setLabelNames(Set<String> labelNames) {
+		this.labelNames = labelNames;
 	}
 
-	public List<String> getCollaboratorEmailIds() {
+	public Set<String> getCollaboratorEmailIds() {
 		return collaboratorEmailIds;
 	}
 
-	public void setCollaboratorEmailIds(List<String> collaboratorEmailIds) {
+	public void setCollaboratorEmailIds(Set<String> collaboratorEmailIds) {
 		this.collaboratorEmailIds = collaboratorEmailIds;
 	}
 }

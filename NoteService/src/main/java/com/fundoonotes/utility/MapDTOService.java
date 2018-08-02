@@ -1,7 +1,9 @@
 package com.fundoonotes.utility;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +31,15 @@ public class MapDTOService
 	public Note noteDtoToNote(CreateNoteDTO noteDTO)
 	{
 		Note note = modelMapper.map(noteDTO, Note.class);
-		if(noteDTO.getLabels() == null)
+		if(noteDTO.getLabelNames() == null)
 		{
 			return note;
 		}
-		List<String> labelIds = noteDTO.getLabels();
-		List<Label> labels = new ArrayList<>();
-		for(int i=0 ; i<labelIds.size() ; i++)
+		Set<String> labelNames = noteDTO.getLabelNames();
+		Set<Label> labels = new HashSet<>();
+		for(String labelName : labelNames)
 		{
-			labels.add(labelDao.findByLabelId(labelIds.get(i)));
+			labels.add(labelDao.findByLabelName(labelName));
 		}
 		note.setLabels(labels);
 		return note;

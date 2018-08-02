@@ -16,6 +16,7 @@ import com.fundoonotes.note.exception.LabelNotFoundException;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.JwtTokenService;
+import com.fundoonotes.utility.NoteOperationsService;
 
 @Transactional
 @Service
@@ -41,6 +42,9 @@ public class LabelServiceImpl implements LabelService
 
 	@Autowired
 	JwtTokenService jwtTokenService;
+	
+	@Autowired
+	NoteOperationsService noteOperationsService; 
 
 	@Override
 	public Label create(String labelName,String ownerId) 
@@ -61,10 +65,10 @@ public class LabelServiceImpl implements LabelService
 			throw new LabelNotFoundException(environment.getProperty("LabelNotFoundException|"));
 		}
 		authorizeService.authorizeUserWithLabel(ownerId, label.getLabelId());
+		noteOperationsService.updateLabels(label);
 		
 		label = labelDao.save(label);
 		LOGGER.info("Updated Label");
-		
 		return label;
 	}
 
@@ -76,6 +80,7 @@ public class LabelServiceImpl implements LabelService
 			throw new LabelNotFoundException(environment.getProperty("LabelNotFoundException|"));
 		}
 		authorizeService.authorizeUserWithLabel(ownerId, labelId);
+		noteOperationsService.removeLabels(labelId);
 		
 		labelDao.deleteById(labelId);
 		LOGGER.info("Deleted Label");

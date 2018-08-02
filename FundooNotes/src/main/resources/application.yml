@@ -15,3 +15,10 @@ server:
 spring:
   application:
     name: User-Service
+    
+logging:
+   file: /loggers/app.log
+#  path: /logs
+#  level:
+#    org.springframework.boot: debug
+#    com.fundoonotes: info

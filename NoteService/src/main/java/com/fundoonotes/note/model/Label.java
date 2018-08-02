@@ -1,7 +1,5 @@
 package com.fundoonotes.note.model;
 
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,18 +10,42 @@ public class Label
 	@Id
 	private String labelId;
 	
-	@Indexed(unique = true)
+//	@Indexed(unique = true)
 	private String labelName;
 	
 	private String userId;
 	
-	private List<String> notes;
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((labelId == null) ? 0 : labelId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Label other = (Label) obj;
+		if (labelId == null) {
+			if (other.labelId != null)
+				return false;
+		} else if (!labelId.equals(other.labelId))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() 
 	{
-		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", userId=" + userId + ", notes=" + notes
-				+ "]";
+		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", userId=" + userId + "]";
 	}
 
 	public String getLabelId() {
@@ -48,13 +70,5 @@ public class Label
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public List<String> getNotes() {
-		return notes;
-	}
-
-	public void setNotes(List<String> notes) {
-		this.notes = notes;
 	}
 }

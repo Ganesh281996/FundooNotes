@@ -3,40 +3,35 @@ package com.fundoonotes.note.dto;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.WebScrap;
 
-@Document(collection="Notes")
 public class ResponseNoteDTO
 {
-	@Id
 	private String noteId;
-	
+
 	private String title;
-	
+
 	private String body;
-	
+
 	private String colour = "white";
-	
+
 	private Date remainder;
-		
+
 	private String lastUpdatedDate;
-	
+
 	private boolean isPinned = false;
-	
+
 	private boolean isArchieved = false;
-	
+
 	private boolean inTrash = false;
-	
+
 	private String ownerId;
-	
+
 	private List<Label> labels;
-	
+
 	private List<CollaboratorResponseDTO> collaborators;
-	
+
 	private List<WebScrap> webScraps;
 
 	@Override

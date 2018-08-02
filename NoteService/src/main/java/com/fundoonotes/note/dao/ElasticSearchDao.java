@@ -51,7 +51,9 @@ public class ElasticSearchDao
 	
 	public void updateNote(Note note)
 	{
-		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, note.getNoteId());
+		IndexRequest indexRequest = new IndexRequest("mediaitems", "mediaitem", note.getNoteId())
+	            .source(note);
+		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, note.getNoteId()).upsert(indexRequest);
 		try
 		{
 			restHighLevelClient.update(updateRequest);

@@ -1,8 +1,9 @@
 package com.fundoonotes.utility;
 
 import java.util.Date;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Jwts;
@@ -11,7 +12,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtTokenService 
 {
-	private static final Logger LOGGER=Logger.getLogger(JwtTokenService.class.getName());
+	private static final Logger LOGGER=LoggerFactory.getLogger(JwtTokenService.class);
 	
 	private static final String KEY = "nothing";
 	private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;

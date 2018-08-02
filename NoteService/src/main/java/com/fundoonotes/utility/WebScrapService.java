@@ -1,8 +1,9 @@
 package com.fundoonotes.utility;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
@@ -12,31 +13,31 @@ import com.fundoonotes.note.model.WebScrap;
 
 @Service
 public class WebScrapService 
-{	
+{
 	public Note webScrapping(Note note)
 	{
-		List<WebScrap> webScraps = genericWebScrap(note.getBody());
+		Set<WebScrap> webScraps = genericWebScrap(note.getBody());
 		webScraps.addAll(genericWebScrap(note.getTitle()));
-		note.setWebScrapes(webScraps);
+		note.setWebScraps(webScraps);
 		return note;
 	}
-	
-	public List<WebScrap> genericWebScrap(String data)
+
+	public Set<WebScrap> genericWebScrap(String data)
 	{
-		List<String> urls = getUrls(data);
-		List<WebScrap> webScraps = new ArrayList<>();
+		Set<String> urls = getUrls(data);
+		Set<WebScrap> webScraps = new HashSet<>();
 		for(String url : urls)
 		{
 			webScraps.add(getWebScraps(url));
 		}
 		return webScraps;
 	}
-		
-	public List<String> getUrls(String body)
+
+	public Set<String> getUrls(String body)
 	{
-		List<String> urls = new ArrayList<>();
+		Set<String> urls = new HashSet<>();
 		String[] checkForUrls = body.split(" ");
-		
+
 		for(int i=0 ; i<checkForUrls.length ; i++)
 		{
 			if(checkForUrls[i].startsWith("http"))
@@ -46,7 +47,7 @@ public class WebScrapService
 		}
 		return urls;
 	}
-	
+
 	public WebScrap getWebScraps(String url)
 	{
 		WebScrap webScrap = new WebScrap();

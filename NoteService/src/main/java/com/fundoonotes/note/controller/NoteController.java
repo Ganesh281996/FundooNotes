@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fundoonotes.api.NoteAPI;
 import com.fundoonotes.note.dto.CreateNoteDTO;
 import com.fundoonotes.note.dto.ResponseNoteDTO;
+import com.fundoonotes.note.dto.UpdateNoteDTO;
 import com.fundoonotes.note.model.Note;
 import com.fundoonotes.note.model.User;
-import com.fundoonotes.note.model.WebScrap;
 import com.fundoonotes.note.service.NoteService;
 import com.fundoonotes.utility.JwtTokenService;
 import com.fundoonotes.utility.Response;
@@ -40,9 +40,7 @@ public class NoteController
 		String token = jwtTokenService.getJwtToken("5b47323b12b3253f929ad0b9");
 		System.out.println(token);
 	}
-	
-	Response response;
-	
+		
 	@PostMapping(value="/dummyuser")
 	public String createDummyUser(@RequestBody User user)
 	{
@@ -54,15 +52,16 @@ public class NoteController
 	public ResponseEntity<ResponseNoteDTO> createNote(@RequestBody CreateNoteDTO noteDTO
 			,HttpServletRequest request)
 	{
+		System.out.println(noteDTO);
 		ResponseNoteDTO note = noteService.createNote(noteDTO,(String)request.getAttribute("ownerId"));
 		return new ResponseEntity<>(note,HttpStatus.OK);
 	}
 	
 	@PutMapping(value=NoteAPI.UPDATE)
-	public ResponseEntity<ResponseNoteDTO> updateNote(@RequestBody Note note
+	public ResponseEntity<ResponseNoteDTO> updateNote(@RequestBody UpdateNoteDTO updateNoteDTO
 			,HttpServletRequest request)
 	{
-		ResponseNoteDTO responseNoteDTO = noteService.updateNote(note,(String)request.getAttribute("ownerId"));
+		ResponseNoteDTO responseNoteDTO = noteService.updateNote(updateNoteDTO,(String)request.getAttribute("ownerId"));
 		return new ResponseEntity<>(responseNoteDTO,HttpStatus.OK);
 	}
 	
@@ -126,13 +125,5 @@ public class NoteController
 	{
 		noteService.label(noteId, labelId, (String)request.getAttribute("ownerId"));
 		return new ResponseEntity<>(new Response("Label has been Added or Removed"),HttpStatus.OK);
-	}
-	
-	@GetMapping(value=NoteAPI.SCRAP)
-	public ResponseEntity<WebScrap> getWebScrap(@PathVariable("url") String url
-			,HttpServletRequest request)
-	{
-		WebScrap scrap = noteService.getWebDetails(url);
-		return new ResponseEntity<>(scrap, HttpStatus.OK);
 	}
 }

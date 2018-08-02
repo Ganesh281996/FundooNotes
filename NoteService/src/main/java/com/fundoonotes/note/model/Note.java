@@ -2,6 +2,7 @@ package com.fundoonotes.note.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -32,11 +33,11 @@ public class Note
 	
 	private String ownerId;
 	
-	private List<Label> labels;
+	private Set<Label> labels;
 	
 	private List<String> collaborators;
 	
-	private List<WebScrap> webScraps;
+	private Set<WebScrap> webScraps;
 
 	@Override
 	public String toString() 
@@ -135,11 +136,11 @@ public class Note
 		this.ownerId = ownerId;
 	}
 
-	public List<Label> getLabels() {
+	public Set<Label> getLabels() {
 		return labels;
 	}
 
-	public void setLabels(List<Label> labels) {
+	public void setLabels(Set<Label> labels) {
 		this.labels = labels;
 	}
 
@@ -151,11 +152,11 @@ public class Note
 		this.collaborators = collaborators;
 	}
 
-	public List<WebScrap> getWebScraps() {
+	public Set<WebScrap> getWebScraps() {
 		return webScraps;
 	}
 
-	public void setWebScrapes(List<WebScrap> webScraps) {
+	public void setWebScraps(Set<WebScrap> webScraps) {
 		this.webScraps = webScraps;
 	}
 }

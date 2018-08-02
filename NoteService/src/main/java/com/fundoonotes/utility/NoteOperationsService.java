@@ -2,7 +2,7 @@ package com.fundoonotes.utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import com.fundoonotes.note.model.Note;
 public class NoteOperationsService 
 {
 	@Autowired
-	private static LabelDao labelDao;
+	LabelDao labelDao;
 	
 	@Autowired
-	private static NoteDao noteDao;
+	NoteDao noteDao;
 	
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/YYYY  hh:mm:ss");
 		
@@ -31,22 +31,55 @@ public class NoteOperationsService
 		return note;
 	}
 	
-	public void addLabels(Note note,List<String> labelNames)
+	public void removeLabels(String labelId)
 	{
-		Label label = null;
+		Label label = labelDao.findByLabelId(labelId);
+		Set<Note> notes = noteDao.findByLabels_labelId(labelId);
 		
-		for(String labelName : labelNames)
+		Set<Label> labels = null;
+		for(Note  note : notes)
 		{
-			if(!labelDao.existsByLabelName(labelName))
-			{
-				labelNames.remove(labelName);
-			}
+			notes.remove(note);
+			labels = note.getLabels();
+			labels.remove(label);
+			note.setLabels(labels);
+			notes.add(note);
 		}
-		note = noteDao.save(note);
-		for(String labelName : labelNames)
-		{
-			label = labelDao.findByLabelName(labelName);
-//			label.getNotes().add(e);
-		}
+		noteDao.saveAll(notes);
 	}
+	
+	public void updateLabels(Label label)
+	{
+		Set<Note> notes = noteDao.findByLabels_labelId(label.getLabelId());
+		Set<Label> labels = null;
+		for(Note note : notes)
+		{
+			notes.remove(note);
+			labels = note.getLabels();			
+			labels.remove(label);
+			labels.add(label);
+			note.setLabels(labels);
+			notes.add(note);
+		}
+		noteDao.saveAll(notes);
+	}
+	
+//	public void addLabels(Note note,List<String> labelNames)
+//	{
+//		Label label = null;
+//		
+//		for(String labelName : labelNames)
+//		{
+//			if(!labelDao.existsByLabelName(labelName))
+//			{
+//				labelNames.remove(labelName);
+//			}
+//		}
+//		note = noteDao.save(note);
+//		for(String labelName : labelNames)
+//		{
+//			label = labelDao.findByLabelName(labelName);
+////			label.getNotes().add(e);
+//		}
+//	}
 }
