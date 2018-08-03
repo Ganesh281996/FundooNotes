@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.fundoonotes.note.dao.ElasticSearchDao;
 import com.fundoonotes.note.dao.LabelDao;
 import com.fundoonotes.note.dao.NoteDao;
-import com.fundoonotes.note.dao.Userdao;
 import com.fundoonotes.note.dto.CreateNoteDTO;
 import com.fundoonotes.note.dto.ResponseNoteDTO;
 import com.fundoonotes.note.dto.UpdateNoteDTO;
@@ -24,11 +23,9 @@ import com.fundoonotes.note.exception.LabelNotFoundException;
 import com.fundoonotes.note.exception.NoteNotFoundException;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.Note;
-import com.fundoonotes.note.model.User;
 import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.MapDTOService;
 import com.fundoonotes.utility.NoteOperationsService;
-import com.fundoonotes.utility.Response;
 import com.fundoonotes.utility.WebScrapService;
 
 @Service
@@ -44,9 +41,6 @@ public class NoteServiceImpl implements NoteService
 
 	@Autowired
 	private NoteDao noteDao;
-
-	@Autowired
-	private Userdao userDao;	
 
 	@Autowired
 	private LabelDao labelDao;
@@ -70,18 +64,12 @@ public class NoteServiceImpl implements NoteService
 	NoteOperationsService noteOperationsService; 
 
 	@Override
-	public Response createDummyUser(User user) 
-	{
-		userDao.save(user);
-		return null;
-	}
-
-	@Override
 	public ResponseNoteDTO createNote(CreateNoteDTO createNoteDTO, String ownerId) 
 	{
 		Note note = mapDTOService.noteDtoToNote(createNoteDTO);
 		note = noteOperationsService.setProperties(note, ownerId);
 		note = webScrapService.webScrapping(note);
+		note = noteOperationsService.addCollaborators(note, createNoteDTO);
 		note = noteDao.save(note);
 		elasticSearchDao.insertNote(note);
 		LOGGER.info("Note has been saved");

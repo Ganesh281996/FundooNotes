@@ -1,56 +1,71 @@
 package com.fundoonotes.note.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Collaborator")
 public class Collaborator 
 {
-	@Id
-	private String collaboratorId;
-	
-	private String sharedBy;
-	
-	private String sharedTo;
-	
-	private String noteId;
+	private String collaboratorEmail;
+
+	private String collaboratorName;
+
+	private String collaboratorProfilePic;
 
 	@Override
 	public String toString() 
 	{
-		return "Collaborator [collaboratorId=" + collaboratorId + ", sharedBy=" + sharedBy + ", sharedTo=" + sharedTo
-				+ ", noteId=" + noteId + "]";
+		return "Collaborator [collaboratorEmail=" + collaboratorEmail + ", collaboratorName=" + collaboratorName
+				+ ", collaboratorProfilePic=" + collaboratorProfilePic + "]";
 	}
 
-	public String getCollaboratorId() {
-		return collaboratorId;
+	@Override
+	public int hashCode() 
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((collaboratorEmail == null) ? 0 : collaboratorEmail.hashCode());
+		return result;
 	}
 
-	public void setCollaboratorId(String collaboratorId) {
-		this.collaboratorId = collaboratorId;
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Collaborator other = (Collaborator) obj;
+		if (collaboratorEmail == null) {
+			if (other.collaboratorEmail != null)
+				return false;
+		} else if (!collaboratorEmail.equals(other.collaboratorEmail))
+			return false;
+		return true;
 	}
 
-	public String getSharedBy() {
-		return sharedBy;
+	public String getCollaboratorEmail() {
+		return collaboratorEmail;
 	}
 
-	public void setSharedBy(String sharedBy) {
-		this.sharedBy = sharedBy;
+	public void setCollaboratorEmail(String collaboratorEmail) {
+		this.collaboratorEmail = collaboratorEmail;
 	}
 
-	public String getSharedTo() {
-		return sharedTo;
+	public String getCollaboratorName() {
+		return collaboratorName;
 	}
 
-	public void setSharedTo(String sharedTo) {
-		this.sharedTo = sharedTo;
+	public void setCollaboratorName(String collaboratorName) {
+		this.collaboratorName = collaboratorName;
 	}
 
-	public String getNoteId() {
-		return noteId;
+	public String getCollaboratorProfilePic() {
+		return collaboratorProfilePic;
 	}
 
-	public void setNoteId(String noteId) {
-		this.noteId = noteId;
+	public void setCollaboratorProfilePic(String collaboratorProfilePic) {
+		this.collaboratorProfilePic = collaboratorProfilePic;
 	}
 }

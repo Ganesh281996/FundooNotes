@@ -1,7 +1,6 @@
 package com.fundoonotes.note.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
@@ -35,7 +34,7 @@ public class Note
 	
 	private Set<Label> labels;
 	
-	private List<String> collaborators;
+	private Set<Collaborator> collaborators;
 	
 	private Set<WebScrap> webScraps;
 
@@ -144,11 +143,11 @@ public class Note
 		this.labels = labels;
 	}
 
-	public List<String> getCollaborators() {
+	public Set<Collaborator> getCollaborators() {
 		return collaborators;
 	}
 
-	public void setCollaborators(List<String> collaborators) {
+	public void setCollaborators(Set<Collaborator> collaborators) {
 		this.collaborators = collaborators;
 	}
 

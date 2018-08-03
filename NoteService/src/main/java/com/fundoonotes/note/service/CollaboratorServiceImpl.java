@@ -1,91 +1,70 @@
 package com.fundoonotes.note.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.fundoonotes.note.dao.CollaboratorDao;
+import com.fundoonotes.note.dao.ElasticSearchDao;
 import com.fundoonotes.note.dao.NoteDao;
-import com.fundoonotes.note.exception.NoteNotFoundException;
-import com.fundoonotes.note.model.Collaborator;
+import com.fundoonotes.note.dto.ResponseNoteDTO;
 import com.fundoonotes.note.model.Note;
+import com.fundoonotes.note.model.User;
 import com.fundoonotes.utility.AuthorizeService;
 import com.fundoonotes.utility.JwtTokenService;
-import com.fundoonotes.utility.Response;
+import com.fundoonotes.utility.NoteOperationsService;
 
 @Service
 @PropertySource(value = "classpath:exception.properties")
 public class CollaboratorServiceImpl implements CollaboratorService 
 {
-	private static final Logger LOGGER = Logger.getLogger(CollaboratorServiceImpl.class.getName());
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CollaboratorServiceImpl.class);
+
 	@Autowired
 	Environment environment; 
-	
-	@Autowired
-	CollaboratorDao collaboratorDao;
-	
+
 	@Autowired
 	AuthorizeService authorizeService; 
-	
+
 	@Autowired
 	NoteDao noteDao;
-	
+
 	@Autowired
 	JwtTokenService jwtTokenService;
 	
+	@Autowired
+	ElasticSearchDao elasticSearchDao; 
+	
+	@Autowired
+	NoteOperationsService noteOperationsService;
+	
+	@Autowired
+	ModelMapper modelMapper; 
+
 	@Override
-	public void addCollaborator(String noteId, String sharedTo,String ownerId) 
-	{	
-		authorizeService.authorizeUserWithNote(ownerId, noteId);
+	public ResponseNoteDTO addCollaborator(String noteId, String collaboratorEmail, String ownerId) 
+	{
+		User user = noteOperationsService.collaboratorValidations(noteId, collaboratorEmail);
 		Note note = noteDao.findByNoteId(noteId);
-		List<String> collaborators = note.getCollaborators();
 		
-		if(collaborators == null)
-		{
-			collaborators = new ArrayList<>();
-		}
-		
-		Collaborator collaborator = new Collaborator();
-		collaborator.setSharedBy(ownerId);
-		collaborator.setSharedTo(sharedTo);
-		collaborator.setNoteId(noteId);
-		collaborator = collaboratorDao.save(collaborator);
-		
-		collaborators.add(collaborator.getSharedTo());
-		note.setCollaborators(collaborators);
-		noteDao.save(note);
+		note = noteOperationsService.updateCollaborator(note, user);
+		note = noteDao.save(note);
+		elasticSearchDao.updateNote(note);
+		return modelMapper.map(note, ResponseNoteDTO.class);
 	}
 
 	@Override
-	public List<Collaborator> getCollaborators(String noteId,String ownerId) 
+	public ResponseNoteDTO removeCollaborator(String noteId, String collaboratorEmail, String ownerId) 
 	{
-		if(!noteDao.existsById(noteId))
-		{
-			throw new NoteNotFoundException(environment.getProperty("NoteNotFoundException"));
-		}
-		authorizeService.authorizeUserWithNote(ownerId, noteId);
-		
-//		Note note = noteDao.findByNoteId(noteId);
-//		List<String> collaborators = note.getCollaborators();
-		
-		return collaboratorDao.findByNoteId(noteId);
-	}
-
-	@Override
-	public void removeCollaborator(String noteId, String collaboratorId,String ownerId) 
-	{
+		noteOperationsService.collaboratorValidations(noteId, collaboratorEmail);
 		Note note = noteDao.findByNoteId(noteId);
-		List<String> collaborators = note.getCollaborators();
-		collaborators.remove(collaboratorId);
-		note.setCollaborators(collaborators);
-		noteDao.save(note);
-		collaboratorDao.deleteByCollaboratorId(collaboratorId);
+		
+		note = noteOperationsService.removeCollaborator(note, collaboratorEmail);
+		note = noteDao.save(note);
+		elasticSearchDao.updateNote(note);
+		return modelMapper.map(note, ResponseNoteDTO.class);
 	}
 }

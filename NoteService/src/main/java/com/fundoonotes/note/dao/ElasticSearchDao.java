@@ -11,12 +11,14 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fundoonotes.note.model.Note;
 
@@ -51,9 +53,15 @@ public class ElasticSearchDao
 	
 	public void updateNote(Note note)
 	{
-		IndexRequest indexRequest = new IndexRequest("mediaitems", "mediaitem", note.getNoteId())
-	            .source(note);
-		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, note.getNoteId()).upsert(indexRequest);
+		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, note.getNoteId()).fetchSource(true);
+		try 
+		{
+			updateRequest.doc(objectMapper.writeValueAsString(note),XContentType.JSON);
+		}
+		catch (JsonProcessingException e) 
+		{
+			e.printStackTrace();
+		}
 		try
 		{
 			restHighLevelClient.update(updateRequest);

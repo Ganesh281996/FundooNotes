@@ -131,8 +131,15 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
+	public User getUserByEmail(String email) 
+	{
+		return userDao.findByEmail(email);
+	}
+
+	@Override
 	public void verifyToken(String token) 
 	{
 		jwtTokenService.verifyToken(token);
 	}
+
 }

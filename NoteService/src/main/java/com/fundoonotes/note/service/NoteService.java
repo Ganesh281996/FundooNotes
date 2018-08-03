@@ -12,8 +12,6 @@ import com.fundoonotes.utility.Response;
 
 public interface NoteService 
 {
-	Response createDummyUser(User user);
-	
 	ResponseNoteDTO createNote(CreateNoteDTO createNoteDTO,String ownerId);
 	ResponseNoteDTO updateNote(UpdateNoteDTO updateNoteDTO, String ownerId);
 	void deleteNote(String noteId,String ownerId);

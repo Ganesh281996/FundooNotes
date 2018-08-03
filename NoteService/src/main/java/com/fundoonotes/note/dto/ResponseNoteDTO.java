@@ -1,8 +1,9 @@
 package com.fundoonotes.note.dto;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
+import com.fundoonotes.note.model.Collaborator;
 import com.fundoonotes.note.model.Label;
 import com.fundoonotes.note.model.WebScrap;
 
@@ -28,11 +29,11 @@ public class ResponseNoteDTO
 
 	private String ownerId;
 
-	private List<Label> labels;
+	private Set<Label> labels;
 
-	private List<CollaboratorResponseDTO> collaborators;
+	private Set<Collaborator> collaborators;
 
-	private List<WebScrap> webScraps;
+	private Set<WebScrap> webScraps;
 
 	@Override
 	public String toString() 
@@ -123,27 +124,27 @@ public class ResponseNoteDTO
 		this.ownerId = ownerId;
 	}
 
-	public List<Label> getLabels() {
+	public Set<Label> getLabels() {
 		return labels;
 	}
 
-	public void setLabels(List<Label> labels) {
+	public void setLabels(Set<Label> labels) {
 		this.labels = labels;
 	}
 
-	public List<CollaboratorResponseDTO> getCollaborators() {
+	public Set<Collaborator> getCollaborators() {
 		return collaborators;
 	}
 
-	public void setCollaborators(List<CollaboratorResponseDTO> collaborators) {
+	public void setCollaborators(Set<Collaborator> collaborators) {
 		this.collaborators = collaborators;
 	}
 
-	public List<WebScrap> getWebScraps() {
+	public Set<WebScrap> getWebScraps() {
 		return webScraps;
 	}
 
-	public void setWebScraps(List<WebScrap> webScraps) {
+	public void setWebScraps(Set<WebScrap> webScraps) {
 		this.webScraps = webScraps;
 	}
 }

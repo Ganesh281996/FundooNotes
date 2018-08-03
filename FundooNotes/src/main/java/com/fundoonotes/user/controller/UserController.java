@@ -18,6 +18,7 @@ import com.fundoonotes.user.dto.EmailDTO;
 import com.fundoonotes.user.dto.LoginDTO;
 import com.fundoonotes.user.dto.RegisterUserDTO;
 import com.fundoonotes.user.model.Response;
+import com.fundoonotes.user.model.User;
 import com.fundoonotes.user.service.UserService;
 
 @RestController()
@@ -71,13 +72,11 @@ public class UserController
 		return new ResponseEntity<Response>(new Response("Password has been changed sucessfully"), HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/getuserbyid/{id}")
-	public ResponseEntity<Response> getUserById(@PathVariable("id") String id)
+	@GetMapping(value="/getuserbyemail/{email}")
+	public User getUserByEmail(@PathVariable("email") String email)
 	{
-//		userService.resetPassword(token, password1,password2);
-		return new ResponseEntity<Response>(new Response("Password has been changed sucessfully"), HttpStatus.OK);
+		return userService.getUserByEmail(email);
 	}
-	
 	
 //	@GetMapping(value="/forgotpassword/resetpassword/{token}")
 //	public ResponseEntity<Response> verifyToken(@PathVariable String token)

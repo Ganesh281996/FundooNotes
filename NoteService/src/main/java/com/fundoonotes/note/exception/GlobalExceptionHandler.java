@@ -48,4 +48,11 @@ public class GlobalExceptionHandler
 		LOGGER.error(exception.getMessage(), exception);
 		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.UNAUTHORIZED);
 	}
+	
+	@ExceptionHandler(value = UserNotFoundException.class)
+	public ResponseEntity<Response> userNotFoundException(UserNotFoundException exception)
+	{
+		LOGGER.error(exception.getMessage(), exception);
+		return new ResponseEntity<>(new Response(exception.getMessage()),HttpStatus.BAD_REQUEST);
+	}
 }

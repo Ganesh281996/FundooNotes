@@ -4,23 +4,23 @@ import java.util.Date;
 import java.util.Set;
 
 public class CreateNoteDTO 
-{	
+{
 	private String title;
-	
+
 	private String body;
-	
+
 	private String colour = "white";
-	
+
 	private Date remainder;
-	
+
 	private boolean isPinned = false;
-	
+
 	private boolean isArchieved = false;
-	
+
 	private boolean inTrash = false;
-	
+
 	private Set<String> labelNames;
-	
+
 	private Set<String> collaboratorEmailIds;
 
 	@Override

@@ -23,7 +23,7 @@ public class JwtTokenService
 				.setSubject(_id)
 				.claim("roles", "user")
 				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis()+36000))
+				.setExpiration(new Date(System.currentTimeMillis()+36000000))
 				.signWith(SIGNATURE_ALGORITHM, KEY)
 				.compact();
 		LOGGER.info("Token has been generated with Users ID : "+_id);

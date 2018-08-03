@@ -25,12 +25,14 @@ public class User implements Serializable
 	private long phoneNumber;
 
 	private boolean isVerified = false;
+	
+	private String profilePic;
 
 	@Override
 	public String toString() 
 	{
 		return "User [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password
-				+ ", phoneNumber=" + phoneNumber + ", isVerified=" + isVerified + "]";
+				+ ", phoneNumber=" + phoneNumber + ", isVerified=" + isVerified + ", profilePic=" + profilePic + "]";
 	}
 
 	public String getUserId() {
@@ -79,5 +81,13 @@ public class User implements Serializable
 
 	public void setVerified(boolean isVerified) {
 		this.isVerified = isVerified;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
 	}
 }

@@ -22,9 +22,7 @@ import com.fundoonotes.note.dto.CreateNoteDTO;
 import com.fundoonotes.note.dto.ResponseNoteDTO;
 import com.fundoonotes.note.dto.UpdateNoteDTO;
 import com.fundoonotes.note.model.Note;
-import com.fundoonotes.note.model.User;
 import com.fundoonotes.note.service.NoteService;
-import com.fundoonotes.utility.JwtTokenService;
 import com.fundoonotes.utility.Response;
 
 @RestController
@@ -33,20 +31,6 @@ public class NoteController
 {
 	@Autowired
 	private NoteService noteService;
-	
-	static
-	{
-		JwtTokenService jwtTokenService=new JwtTokenService();
-		String token = jwtTokenService.getJwtToken("5b47323b12b3253f929ad0b9");
-		System.out.println(token);
-	}
-		
-	@PostMapping(value="/dummyuser")
-	public String createDummyUser(@RequestBody User user)
-	{
-		noteService.createDummyUser(user);
-		return "success";
-	}
 	
 	@PostMapping(value=NoteAPI.CREATE)
 	public ResponseEntity<ResponseNoteDTO> createNote(@RequestBody CreateNoteDTO noteDTO
